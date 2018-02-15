@@ -14,3 +14,7 @@ Chatbar.lua
 easyChannel.lua
 # 聊天表情
 ChatEmote.lua
+# 聊天链接图标
+ChatLinkIcon.lua
+# 聊天物品链接等级
+ChatLinkIlvl.lua

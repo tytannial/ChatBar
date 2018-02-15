@@ -1,8 +1,5 @@
 ﻿-- 修改者 五区-塞拉摩-Leyvaten 插件更新地址 http://nga.178.com/read.php?tid=9633520
 
-local _, ns = ...
-local CurEB = "ChatFrame1EditBox"
-
 --[[
 	配置选项 
 	iconSize 表情大小你可以根据聊天字号调整

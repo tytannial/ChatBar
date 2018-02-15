@@ -3,11 +3,13 @@
 --[[============================== 基本设置区域 ==========================]] --
 -- true(启用)/false(关闭)
 local ShortChannel = true -- 精简公共频道
---local ShowChatLinkIcon = true	-- 聊天连接图标WIP
 local TimeStampFormat = false -- 聊天时间戳
- --
+--
 
---[[============================== 默认的聊天标签,可修改汉字自定义 ==========================]] if (GetLocale() == "zhTW") then
+-- 获取语言
+local Language = GetLocale()
+--[[============================== 默认的聊天标签,可修改汉字自定义 ==========================]]
+if (Language == "zhTW") then
 	--公会
 	CHAT_GUILD_GET = "|Hchannel:GUILD|h[公會]|h %s: "
 	CHAT_OFFICER_GET = "|Hchannel:OFFICER|h[官員]|h %s: "
@@ -38,7 +40,7 @@ local TimeStampFormat = false -- 聊天时间戳
 	CHAT_FLAG_AFK = "[暫離] "
 	CHAT_FLAG_DND = "[勿擾] "
 	CHAT_FLAG_GM = "[GM] "
-elseif (GetLocale() == "zhCN") then
+elseif (Language == "zhCN") then
 	--公会
 	CHAT_GUILD_GET = "|Hchannel:GUILD|h[公会]|h %s: "
 	CHAT_OFFICER_GET = "|Hchannel:OFFICER|h[官员]|h %s: "
@@ -97,43 +99,7 @@ end
 
 local gsub = _G.string.gsub
 local newAddMsg = {}
-local chn, rplc
-if (GetLocale() == "zhCN") then ---国服
-	rplc = {
-		"[%1综]",
-		"[%1交]",
-		"[%1防]",
-		"[%1组]",
-		"[%1守]",
-		"[%1招]",
-		"[%1世]",
-		"[%1自定义]" -- 自定义频道缩写请自行修改
-	}
-elseif (GetLocale() == "zhTW") then ---台服
-	rplc = {
-		"[%1綜合]",
-		"[%1貿易]",
-		"[%1防務]",
-		"[%1組隊]",
-		"[%1世界]",
-		"[%1招募]",
-		"[%1世]",
-		"[%1自定义]" -- 自定义频道缩写请自行修改
-	}
-else
-	rplc = {
-		"[GEN]",
-		"[TR]",
-		"[WD]",
-		"[LD]",
-		"[LFG]",
-		"[GR]",
-		"[BFC]",
-		"[CL]" -- 英文缩写
-	}
-end
-
-chn = {
+local chn = {
 	"%[%d+%. General.-%]",
 	"%[%d+%. Trade.-%]",
 	"%[%d+%. LocalDefense.-%]",
@@ -144,9 +110,43 @@ chn = {
 	"%[%d+%. CustomChannel.-%]" -- 自定义频道英文名随便填写
 }
 
-local L = GetLocale()
+local rplc = {
+	"[GEN]",
+	"[TR]",
+	"[WD]",
+	"[LD]",
+	"[LFG]",
+	"[GR]",
+	"[BFC]",
+	"[CL]" -- 英文缩写
+}
+
+if (Language == "zhCN") then ---国服
+	rplc = {
+		"[%1综]",
+		"[%1交]",
+		"[%1防]",
+		"[%1组]",
+		"[%1守]",
+		"[%1招]",
+		"[%1世]",
+		"[%1自定义]" -- 自定义频道缩写请自行修改
+	}
+elseif (Language == "zhTW") then ---台服
+	rplc = {
+		"[%1綜合]",
+		"[%1貿易]",
+		"[%1防務]",
+		"[%1組隊]",
+		"[%1世界]",
+		"[%1招募]",
+		"[%1世]",
+		"[%1自定义]" -- 自定义频道缩写请自行修改
+	}
+end
+
 ---------------------------------------- 国服简体中文 ---------------------------------------------
-if L == "zhCN" then
+if Language == "zhCN" then
 	---------------------------------------- 台服繁体中文 ---------------------------------------------
 	chn[1] = "%[%d+%. 综合.-%]"
 	chn[2] = "%[%d+%. 交易.-%]"
@@ -156,7 +156,7 @@ if L == "zhCN" then
 	chn[6] = "%[%d+%. 公会招募.-%]"
 	chn[7] = "%[%d+%. 大脚世界频道.-%]"
 	chn[8] = "%[%d+%. 自定义频道.-%]" -- 请修改频道名对应你游戏里的频道
-elseif L == "zhTW" then
+elseif Language == "zhTW" then
 	chn[1] = "%[%d+%. 綜合.-%]"
 	chn[2] = "%[%d+%. 貿易.-%]"
 	chn[3] = "%[%d+%. 本地防務.-%]"
@@ -165,17 +165,28 @@ elseif L == "zhTW" then
 	chn[6] = "%[%d+%. 公會招募.-%]"
 	chn[7] = "%[%d+%. 大脚世界频道.-%]"
 	chn[8] = "%[%d+%. 自定义频道.-%]" -- 请修改频道名对应你游戏里的频道
-else
-	---------------------------------------- 其他语言均为英文 -----------------------------------------------
-	chn[1] = "%[%d+%. General.-%]"
-	chn[2] = "%[%d+%. Trade.-%]"
-	chn[3] = "%[%d+%. LocalDefense.-%]"
-	chn[4] = "%[%d+%. LookingForGroup%]"
-	chn[5] = "%[%d+%. WorldDefense%]"
-	chn[6] = "%[%d+%. GuildRecruitment.-%]"
-	chn[7] = "%[%d+%. BigFootChannel.-%]"
-	chn[8] = "%[%d+%. CustomChannel.-%]" -- 请修改频道名对应你游戏里的频道
 end
+
+local rules = {
+    --!!不要改
+    {pat = "|c%x+|HChatCopy|h.-|h|r", repl = ""},
+    {pat = "|c%x%x%x%x%x%x%x%x(.-)|r", repl = "%1"},
+    --左鍵
+    {pat = "|Hchannel:.-|h.-|h", repl = "", button = "LeftButton"},
+    {pat = "|Hplayer:.-|h.-|h" .. ":", repl = "", button = "LeftButton"},
+    {pat = "|Hplayer:.-|h.-|h" .. "：", repl = "", button = "LeftButton"},
+    {pat = "|HBNplayer:.-|h.-|h" .. ":", repl = "", button = "LeftButton"},
+    {pat = "|HBNplayer:.-|h.-|h" .. "：", repl = "", button = "LeftButton"},
+    --右鍵
+    {pat = "|Hchannel:.-|h(.-)|h", repl = "%1", button = "RightButton"},
+    {pat = "|Hplayer:.-|h(.-)|h", repl = "%1", button = "RightButton"},
+    {pat = "|HBNplayer:.-|h(.-)|h", repl = "%1", button = "RightButton"},
+    --!!不要改
+    {pat = "|H.-|h(.-)|h", repl = "%1"},
+    {pat = "|TInterface\\TargetingFrame\\UI%-RaidTargetingIcon_(%d):0|t", repl = "{rt%1}"},
+    {pat = "|T.-|t", repl = ""},
+    {pat = "^%s+", repl = ""}
+}
 
 -- 时间戳染色
 local ts = "|cff68ccef|h%s|h|r %s"
@@ -188,6 +199,13 @@ local function AddMessage(frame, text, ...)
 		end
 		text = gsub(text, "%[(%d0?)%. .-%]", "%1.")
 	end
+	
+	-- 聊天复制
+	if (type(text) ~= "string") then
+        text = tostring(text)
+    end
+    text = format("|cff68ccef|HChatCopy|h%s|h|r %s", "+", text)
+	
 	-- 聊天时间戳
 	if TimeStampFormat then
 		if (type(text) ~= "string") then
@@ -195,6 +213,7 @@ local function AddMessage(frame, text, ...)
 		end
 		text = format(ts, date("%H:%M:%S"), text)
 	end
+
 	return newAddMsg[frame:GetName()](frame, text, ...)
 end
 
@@ -208,45 +227,41 @@ for i = 1, NUM_CHAT_WINDOWS do -- 对非战斗记录聊天框的信息进行处�
 	end
 end
 
---================================修理装备提示================================--
-local frame = CreateFrame("Frame", nil, UIParent)
-frame:SetPoint("CENTER", UIParent, "CENTER", 0, 400) -- 调整frame在屏幕的位置
-frame:SetWidth(1200) -- 足够大点，不然点击不到
-frame:SetHeight(40)
-frame:Hide()
-frame:SetScale(1)
-frame:EnableMouse(true) -- 确保鼠标按键有效
-
-local FrameText = frame:CreateFontString(nil, "ARTWORK")
-FrameText:SetFontObject(GameFontNormal)
-FrameText:SetFont(STANDARD_TEXT_FONT, 40, "outline")
-FrameText:SetTextColor(0.8, 0, 0, 1) -- change this to change color
-FrameText:SetPoint("CENTER") -- text正常设置到frame自身
-FrameText:SetText("装备都红了，还不滚去修！") -- 没其他用途，就只需要设置一次
-
-frame:RegisterEvent("UPDATE_INVENTORY_DURABILITY")
-frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-
-frame:SetScript(
-	"OnEvent",
-	function(self)
-		for id = 20, 1, -1 do
-			local cur, max = GetInventoryItemDurability(id)
-			if cur and max and cur / max <= 0.2 then --这里修改需要提醒的百分比
-				frame:Show()
-				return -- 只要有一件，不做多余检查，否则你的代码只有第一件装备需要修理时才会显示
-			end
-		end
-		frame:Hide()
+-- 显示信息到输入框
+local function showMessage(msg, button)
+	local editBox = ChatEdit_ChooseBoxForSend()
+	
+	-- 清理链接规则
+	for _, rule in ipairs(rules) do
+        if (not rule.button or rule.button == button) then
+            msg = msg:gsub(rule.pat, rule.repl)
+        end
 	end
-)
+	
+	-- 激活聊天窗 将文本写入
+    ChatEdit_ActivateChat(editBox)
+    editBox:SetText(editBox:GetText() .. msg)
+    editBox:HighlightText()
+end
 
--- 处理右键点击
-frame:SetScript(
-	"OnMouseUp",
-	function(self, btn)
-		if btn == "RightButton" then
-			frame:Hide()
-		end
-	end
-)
+-- 获取信息信息
+local function getMessage(...)
+    local object
+    for i = 1, select("#", ...) do
+        object = select(i, ...)
+        if (object:IsObjectType("FontString") and MouseIsOver(object)) then
+            return object:GetText()
+        end
+    end
+    return ""
+end
+
+-- 聊天链接文字钩子
+local _SetItemRef = SetItemRef
+SetItemRef = function (link, text, button, chatFrame)
+    if (link:sub(1, 8) == "ChatCopy") then
+        local msg = getMessage(chatFrame.FontStringContainer:GetRegions())
+        return showMessage(msg, button)
+    end
+    _SetItemRef(link, text, button, chatFrame)
+end
