@@ -18,3 +18,5 @@ ChatEmote.lua
 ChatLinkIcon.lua
 # 聊天物品链接等级
 ChatLinkIlvl.lua
+# 属性报告
+StatsReport.lua

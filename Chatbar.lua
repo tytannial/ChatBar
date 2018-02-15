@@ -88,7 +88,9 @@ function Roll_OnClick()
 end
 
 function Report_OnClick()
-
+    print("我的属性：" .. StatReport())
+    ChatEdit_ActivateChat(inputbox)
+    inputbox:SetText(StatReport())
 end
 
 local ChannelButtons = {
@@ -100,9 +102,9 @@ local ChannelButtons = {
     {name = "LFT", text = "副", color = {1.00, 0.50, 0.00}, callback = ChannelBG_OnClick},
     {name = "chn01", text = "综", color = {0.82, 0.70, 0.55}, callback = Channel01_OnClick},
     {name = "world", text = "世", color = {0.78, 1.00, 0.59}, callback = ChannelWorld_OnClick},
-    {name = "emote", text = "表", color = {1.00, 1.00, 0.00}, callback = ChatEmote_OnClick},
+    {name = "emote", text = "表", color = {1.00, 0.50, 1.00}, callback = ChatEmote_OnClick},
     {name = "roll", text = "骰", color = {1.00, 1.00, 0.00}, callback = Roll_OnClick},
-    {name = "report", text = "报", color = {1.00, 1.00, 0.00}, callback = Report_OnClick}
+    {name = "report", text = "报", color = {0.80, 0.30, 0.30}, callback = Report_OnClick}
 }
 
 function CreateChannelButton(data, index)
