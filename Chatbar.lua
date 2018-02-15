@@ -2,6 +2,8 @@
 -- 修改者 五区-塞拉摩-Leyvaten 插件更新地址 http://nga.178.com/read.php?tid=9633520
 -- 感谢 NGA@雪白的黑牛 添加和制作，装备图标和装等显示，以及进入频道和离开按钮，以及部分代码优化。
 
+-- ChatBar = LibStub("AceAddon-3.0"):NewAddon("ChatBar", "AceEvent-3.0", "AceHook-3.0", "AceConsole-3.0")
+
 --[[=========================== 基本设置区域 ==========================]]
 -- 频道选择条位置瞄点
 local ChatBarOffsetX = 0 -- 相对于默认位置的X坐标
@@ -85,6 +87,10 @@ function Roll_OnClick()
     RandomRoll(1, 100)
 end
 
+function Report_OnClick()
+
+end
+
 local ChannelButtons = {
     {name = "say", text = "说", color = {1.00, 1.00, 1.00}, callback = ChannelSay_OnClick},
     {name = "yell", text = "喊", color = {1.00, 0.25, 0.25}, callback = ChannelYell_OnClick},
@@ -96,7 +102,7 @@ local ChannelButtons = {
     {name = "world", text = "世", color = {0.78, 1.00, 0.59}, callback = ChannelWorld_OnClick},
     {name = "emote", text = "表", color = {1.00, 1.00, 0.00}, callback = ChatEmote_OnClick},
     {name = "roll", text = "骰", color = {1.00, 1.00, 0.00}, callback = Roll_OnClick},
-    {name = "report", text = "报", color = {1.00, 1.00, 0.00}, callback = nil}
+    {name = "report", text = "报", color = {1.00, 1.00, 0.00}, callback = Report_OnClick}
 }
 
 function CreateChannelButton(data, index)
@@ -120,3 +126,33 @@ for i = 1, #ChannelButtons do -- 对非战斗记录聊天框的信息进行处�
     local button = ChannelButtons[i]
     CreateChannelButton(button, i)
 end
+
+-- function ChatBar:ChatEdit_UpdateHeader(editBox)
+--     local type = editBox:GetAttribute("chatType")
+--     if (type) then
+--         local header = _G[editBox:GetName() .. "Header"]
+--         local headerText = header and header:GetText()
+--         if (headerText) then
+--             if headerText:find("大脚世界频道") then
+--                 header:SetText(string.gsub(headerText, "大脚世界频道", "世"))
+--             else
+--                 return
+--             end
+--             editBox:SetTextInsets(15 + header:GetWidth(), 13, 0, 0)
+--         end
+--     end
+-- end
+
+-- function ChatBar:OnInitialize()
+--     -- print("ChatBar Loaded")
+--     -- Called when the addon is loaded
+-- end
+
+-- function ChatBar:OnEnable()
+--     self:SecureHook("ChatEdit_UpdateHeader")
+--     -- Called when the addon is enabled
+-- end
+
+-- function ChatBar:OnDisable()
+--     -- Called when the addon is disabled
+-- end

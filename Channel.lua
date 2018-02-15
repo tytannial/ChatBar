@@ -145,9 +145,8 @@ elseif (Language == "zhTW") then ---台服
 	}
 end
 
----------------------------------------- 国服简体中文 ---------------------------------------------
 if Language == "zhCN" then
-	---------------------------------------- 台服繁体中文 ---------------------------------------------
+	---------------------------------------- 国服简体中文 ---------------------------------------------
 	chn[1] = "%[%d+%. 综合.-%]"
 	chn[2] = "%[%d+%. 交易.-%]"
 	chn[3] = "%[%d+%. 本地防务.-%]"
@@ -157,6 +156,7 @@ if Language == "zhCN" then
 	chn[7] = "%[%d+%. 大脚世界频道.-%]"
 	chn[8] = "%[%d+%. 自定义频道.-%]" -- 请修改频道名对应你游戏里的频道
 elseif Language == "zhTW" then
+	---------------------------------------- 台服繁体中文 ---------------------------------------------
 	chn[1] = "%[%d+%. 綜合.-%]"
 	chn[2] = "%[%d+%. 貿易.-%]"
 	chn[3] = "%[%d+%. 本地防務.-%]"
@@ -168,24 +168,24 @@ elseif Language == "zhTW" then
 end
 
 local rules = {
-    --!!不要改
-    {pat = "|c%x+|HChatCopy|h.-|h|r", repl = ""},
-    {pat = "|c%x%x%x%x%x%x%x%x(.-)|r", repl = "%1"},
-    --左鍵
-    {pat = "|Hchannel:.-|h.-|h", repl = "", button = "LeftButton"},
-    {pat = "|Hplayer:.-|h.-|h" .. ":", repl = "", button = "LeftButton"},
-    {pat = "|Hplayer:.-|h.-|h" .. "：", repl = "", button = "LeftButton"},
-    {pat = "|HBNplayer:.-|h.-|h" .. ":", repl = "", button = "LeftButton"},
-    {pat = "|HBNplayer:.-|h.-|h" .. "：", repl = "", button = "LeftButton"},
-    --右鍵
-    {pat = "|Hchannel:.-|h(.-)|h", repl = "%1", button = "RightButton"},
-    {pat = "|Hplayer:.-|h(.-)|h", repl = "%1", button = "RightButton"},
-    {pat = "|HBNplayer:.-|h(.-)|h", repl = "%1", button = "RightButton"},
-    --!!不要改
-    {pat = "|H.-|h(.-)|h", repl = "%1"},
-    {pat = "|TInterface\\TargetingFrame\\UI%-RaidTargetingIcon_(%d):0|t", repl = "{rt%1}"},
-    {pat = "|T.-|t", repl = ""},
-    {pat = "^%s+", repl = ""}
+	--!!不要改
+	{pat = "|c%x+|HChatCopy|h.-|h|r", repl = ""},
+	{pat = "|c%x%x%x%x%x%x%x%x(.-)|r", repl = "%1"},
+	--左鍵
+	{pat = "|Hchannel:.-|h.-|h", repl = "", button = "LeftButton"},
+	{pat = "|Hplayer:.-|h.-|h" .. ":", repl = "", button = "LeftButton"},
+	{pat = "|Hplayer:.-|h.-|h" .. "：", repl = "", button = "LeftButton"},
+	{pat = "|HBNplayer:.-|h.-|h" .. ":", repl = "", button = "LeftButton"},
+	{pat = "|HBNplayer:.-|h.-|h" .. "：", repl = "", button = "LeftButton"},
+	--右鍵
+	{pat = "|Hchannel:.-|h(.-)|h", repl = "%1", button = "RightButton"},
+	{pat = "|Hplayer:.-|h(.-)|h", repl = "%1", button = "RightButton"},
+	{pat = "|HBNplayer:.-|h(.-)|h", repl = "%1", button = "RightButton"},
+	--!!不要改
+	{pat = "|H.-|h(.-)|h", repl = "%1"},
+	{pat = "|TInterface\\TargetingFrame\\UI%-RaidTargetingIcon_(%d):0|t", repl = "{rt%1}"},
+	{pat = "|T.-|t", repl = ""},
+	{pat = "^%s+", repl = ""}
 }
 
 -- 时间戳染色
@@ -199,13 +199,13 @@ local function AddMessage(frame, text, ...)
 		end
 		text = gsub(text, "%[(%d0?)%. .-%]", "%1.")
 	end
-	
+
 	-- 聊天复制
 	if (type(text) ~= "string") then
-        text = tostring(text)
-    end
-    text = format("|cff68ccef|HChatCopy|h%s|h|r %s", "+", text)
-	
+		text = tostring(text)
+	end
+	text = format("|cff68ccef|HChatCopy|h%s|h|r %s", "+", text)
+
 	-- 聊天时间戳
 	if TimeStampFormat then
 		if (type(text) ~= "string") then
@@ -230,38 +230,38 @@ end
 -- 显示信息到输入框
 local function showMessage(msg, button)
 	local editBox = ChatEdit_ChooseBoxForSend()
-	
+
 	-- 清理链接规则
 	for _, rule in ipairs(rules) do
-        if (not rule.button or rule.button == button) then
-            msg = msg:gsub(rule.pat, rule.repl)
-        end
+		if (not rule.button or rule.button == button) then
+			msg = msg:gsub(rule.pat, rule.repl)
+		end
 	end
-	
+
 	-- 激活聊天窗 将文本写入
-    ChatEdit_ActivateChat(editBox)
-    editBox:SetText(editBox:GetText() .. msg)
-    editBox:HighlightText()
+	ChatEdit_ActivateChat(editBox)
+	editBox:SetText(editBox:GetText() .. msg)
+	editBox:HighlightText()
 end
 
 -- 获取信息信息
 local function getMessage(...)
-    local object
-    for i = 1, select("#", ...) do
-        object = select(i, ...)
-        if (object:IsObjectType("FontString") and MouseIsOver(object)) then
-            return object:GetText()
-        end
-    end
-    return ""
+	local object
+	for i = 1, select("#", ...) do
+		object = select(i, ...)
+		if (object:IsObjectType("FontString") and MouseIsOver(object)) then
+			return object:GetText()
+		end
+	end
+	return ""
 end
 
 -- 聊天链接文字钩子
 local _SetItemRef = SetItemRef
-SetItemRef = function (link, text, button, chatFrame)
-    if (link:sub(1, 8) == "ChatCopy") then
-        local msg = getMessage(chatFrame.FontStringContainer:GetRegions())
-        return showMessage(msg, button)
-    end
-    _SetItemRef(link, text, button, chatFrame)
+SetItemRef = function(link, text, button, chatFrame)
+	if (link:sub(1, 8) == "ChatCopy") then
+		local msg = getMessage(chatFrame.FontStringContainer:GetRegions())
+		return showMessage(msg, button)
+	end
+	_SetItemRef(link, text, button, chatFrame)
 end
