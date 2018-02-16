@@ -11,15 +11,14 @@ local ChatBarOffsetY = 0 -- 相对于默认位置的Y坐标
 
 -- 输入框位置调整
 local UseTopInput = false -- 启用上方聊天框
-
 --[[=============================== END ==============================]]
+
 local chatFrame = SELECTED_DOCK_FRAME -- 聊天框架
 local inputbox = chatFrame.editBox -- 输入框
 
 COLORSCHEME_BORDER = {0.3, 0.3, 0.3, 1} -- 边框颜色
 
 -- 主框架初始化
-
 local chat = CreateFrame("Frame", "chat", UIParent)
 chat:SetWidth(300) -- 主框体宽度
 chat:SetHeight(23) -- 主框体高度

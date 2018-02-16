@@ -1,4 +1,4 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: SimpleChat
 ## Title-zhCN: 简易聊天增强
 ## Title-zhTW: 簡易聊天增強
@@ -6,10 +6,10 @@
 ## Notes-zhCN: 右键【世】可以屏蔽/打开世界频道
 ## Notes-zhTW: 右鍵【世】可以屏蔽/打開世界頻道.
 
-# 聊天频道缩写
-channel.lua
 # 聊天选择条
 Chatbar.lua
+# 聊天频道缩写
+channel.lua
 # Tab键切频道
 easyChannel.lua
 # 聊天表情
@@ -19,4 +19,4 @@ ChatLinkIcon.lua
 # 聊天物品链接等级
 ChatLinkIlvl.lua
 # 属性报告
-StatsReport.lua
+StatReport.lua
