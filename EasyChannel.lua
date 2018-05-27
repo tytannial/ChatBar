@@ -4,6 +4,7 @@
 function ChatEdit_CustomTabPressed(...)
     return ChatEdit_CustomTabPressed_Inner(...)
 end
+
 local cycles = {
     -- "说"
     {
@@ -79,10 +80,7 @@ local cycles = {
     }
 }
 
-local lastTabTime, lastChatType, lastTellTarget  --记录上次的A tab B tab 处理，此时B是curr，A是last，记录A为lastChatType or lastWhisperType
-
 local chatTypeBeforeSwitch, tellTargetBeforeSwitch  --记录在频道和密语之间切换时的状态
-
 function ChatEdit_CustomTabPressed_Inner(self)
     if strsub(tostring(self:GetText()), 1, 1) == "/" then
         return
@@ -128,43 +126,4 @@ function ChatEdit_CustomTabPressed_Inner(self)
             end
         end
     end
-end
-
-function U1Chat_SetChatType(chatType, index)
-    local chatFrame = GetCVar("chatStyle") == "im" and SELECTED_CHAT_FRAME or DEFAULT_CHAT_FRAME
-    local text = ""
-    if (string.find(chatType, "CHANNEL")) then
-        chatFrame.editBox:Show()
-        if
-            (chatFrame.editBox:GetAttribute("chatType") == "CHANNEL") and
-                (chatFrame.editBox:GetAttribute("channelTarget") == index)
-         then
-            ChatFrame_OpenChat("", chatFrame)
-        else
-            chatFrame.editBox:SetAttribute("chatType", "CHANNEL")
-            chatFrame.editBox:SetAttribute("channelTarget", index)
-            ChatEdit_UpdateHeader(chatFrame.editBox)
-        end
-    else
-        if (chatType == "WHISPER") then
-            text = ""
-            ChatFrame_ReplyTell(chatFrame)
-            if (UnitExists("target") and UnitIsFriend("target", "player") and UnitIsPlayer("target")) then
-                text = text .. UnitName("target") .. " "
-            end
-
-            ChatFrame_OpenChat(text, chatFrame)
-        else
-            if (not chatFrame.editBox:IsVisible()) then
-                ChatFrame_OpenChat("", chatFrame)
-            end
-            -- ChatFrame_OpenChat("", chatFrame);
-            text = chatFrame.editBox:GetText()
-            text = string.gsub(text, "^/[Ww] ", "")
-            chatFrame.editBox:SetText(text)
-            chatFrame.editBox:SetAttribute("chatType", chatType)
-            ChatEdit_UpdateHeader(chatFrame.editBox)
-        end
-    end
-    chatFrame.editBox:SetFocus()
 end

@@ -1,14 +1,14 @@
 --[[============================== 属性通报 ==========================]] --
 
 -- 本地化专精
-function Talent()
+local function Talent()
     local Spec = GetSpecialization()
     local SpecName = Spec and select(2, GetSpecializationInfo(Spec)) or "无"
     return SpecName
 end
 
 -- 格式化血量
-function HealText()
+local function HealText()
     local HP = UnitHealthMax("player")
     if HP > 1e4 then
         return format("%.2f万", HP / 1e4)
@@ -17,7 +17,7 @@ function HealText()
     end
 end
 
-function ArtifactLevel()
+local function ArtifactLevel()
     local HPlv = " "
     if C_ArtifactUI.GetEquippedArtifactInfo() then
         HPlv = select(6, C_ArtifactUI.GetEquippedArtifactInfo())
@@ -26,7 +26,7 @@ function ArtifactLevel()
 end
 
 -- 基础属性
-function BaseInfo()
+local function BaseInfo()
     local BaseStat = ""
     BaseStat = BaseStat .. ("[%s] "):format(UnitClass("player"))
     BaseStat = BaseStat .. ("[%s] "):format(Talent())
@@ -38,7 +38,7 @@ end
 
 -- 输出属性(9 = 暴击 12 = 溅射 17 = 吸血 18 = 急速 21 = 闪避 26 = 精通 29 = 装备+自身全能 31 = 装备全能)
 -- by图图
-function DpsInfo()
+local function DpsInfo()
     local DpsStat = {"", "", ""}
     local specAttr = {
         --纯力敏智属性职业
@@ -67,7 +67,7 @@ function DpsInfo()
 end
 
 -- 坦克属性
-function TankInfo()
+local function TankInfo()
     local TankStat = ""
     TankStat = TankStat .. ("耐力:%s "):format(UnitStat("player", 3))
     TankStat = TankStat .. ("护甲:%s "):format(UnitArmor("player"))
@@ -78,15 +78,15 @@ function TankInfo()
 end
 
 -- 治疗属性
-function HealInfo()
+local function HealInfo()
     local HealStat = ""
-    --HealStat = HealStat..("精神:%s "):format(UnitStat("player", 5))
-    HealStat = HealStat .. ("法力回复:%d "):format(GetManaRegen() * 5)
+    -- HealStat = HealStat..("精神:%s "):format(UnitStat("player", 5))
+    -- HealStat = HealStat .. ("法力回复:%d "):format(GetManaRegen() * 5)
     return HealStat
 end
 
 -- 增强属性
-function MoreInfo()
+local function MoreInfo()
     local MoreStat = ""
     MoreStat = MoreStat .. ("爆击:%.0f%% "):format(GetCritChance())
     MoreStat = MoreStat .. ("急速:%.0f%% "):format(GetMeleeHaste())
