@@ -12,7 +12,7 @@ local Config = {
     offsetX = 30,
     offsetY = 30,
     enableEmoteInput = true
--- ,enableBubbleEmote = false -- 这个功能会扫描所有聊天泡泡框架解析表情，容易扫描到被保护的框架，所以暂时移除了。
+    -- ,enableBubbleEmote = false -- 这个功能会扫描所有聊天泡泡框架解析表情，容易扫描到被保护的框架，所以暂时移除了。
 }
 
 -- 表情选择器框架
@@ -25,68 +25,68 @@ local fmtstring = format("\124T%%s:%d\124t", max(floor(select(2, SELECTED_CHAT_F
 local customEmoteStartIndex = 9
 
 local emotes = {
-        --原版暴雪提供的8个图标
-        {"{rt1}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_1]=]},
-        {"{rt2}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_2]=]},
-        {"{rt3}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_3]=]},
-        {"{rt4}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_4]=]},
-        {"{rt5}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_5]=]},
-        {"{rt6}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_6]=]},
-        {"{rt7}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_7]=]},
-        {"{rt8}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_8]=]},
-        --自定义表情
-        {"{天使}", [=[Interface\Addons\ChatBar\Textures\Emotion\Angel]=]},
-        {"{生气}", [=[Interface\Addons\ChatBar\Textures\Emotion\Angry]=]},
-        {"{大笑}", [=[Interface\Addons\ChatBar\Textures\Emotion\Biglaugh]=]},
-        {"{鼓掌}", [=[Interface\Addons\ChatBar\Textures\Emotion\Clap]=]},
-        {"{酷}", [=[Interface\Addons\ChatBar\Textures\Emotion\Cool]=]},
-        {"{哭}", [=[Interface\Addons\ChatBar\Textures\Emotion\Cry]=]},
-        {"{可爱}", [=[Interface\Addons\ChatBar\Textures\Emotion\Cutie]=]},
-        {"{鄙视}", [=[Interface\Addons\ChatBar\Textures\Emotion\Despise]=]},
-        {"{美梦}", [=[Interface\Addons\ChatBar\Textures\Emotion\Dreamsmile]=]},
-        {"{尴尬}", [=[Interface\Addons\ChatBar\Textures\Emotion\Embarrass]=]},
-        {"{邪恶}", [=[Interface\Addons\ChatBar\Textures\Emotion\Evil]=]},
-        {"{兴奋}", [=[Interface\Addons\ChatBar\Textures\Emotion\Excited]=]},
-        {"{晕}", [=[Interface\Addons\ChatBar\Textures\Emotion\Faint]=]},
-        {"{打架}", [=[Interface\Addons\ChatBar\Textures\Emotion\Fight]=]},
-        {"{流感}", [=[Interface\Addons\ChatBar\Textures\Emotion\Flu]=]},
-        {"{呆}", [=[Interface\Addons\ChatBar\Textures\Emotion\Freeze]=]},
-        {"{皱眉}", [=[Interface\Addons\ChatBar\Textures\Emotion\Frown]=]},
-        {"{致敬}", [=[Interface\Addons\ChatBar\Textures\Emotion\Greet]=]},
-        {"{鬼脸}", [=[Interface\Addons\ChatBar\Textures\Emotion\Grimace]=]},
-        {"{龇牙}", [=[Interface\Addons\ChatBar\Textures\Emotion\Growl]=]},
-        {"{开心}", [=[Interface\Addons\ChatBar\Textures\Emotion\Happy]=]},
-        {"{心}", [=[Interface\Addons\ChatBar\Textures\Emotion\Heart]=]},
-        {"{恐惧}", [=[Interface\Addons\ChatBar\Textures\Emotion\Horror]=]},
-        {"{生病}", [=[Interface\Addons\ChatBar\Textures\Emotion\Ill]=]},
-        {"{无辜}", [=[Interface\Addons\ChatBar\Textures\Emotion\Innocent]=]},
-        {"{功夫}", [=[Interface\Addons\ChatBar\Textures\Emotion\Kongfu]=]},
-        {"{花痴}", [=[Interface\Addons\ChatBar\Textures\Emotion\Love]=]},
-        {"{邮件}", [=[Interface\Addons\ChatBar\Textures\Emotion\Mail]=]},
-        {"{化妆}", [=[Interface\Addons\ChatBar\Textures\Emotion\Makeup]=]},
-        -- {"{马里奥}", [=[Interface\Addons\ChatBar\Textures\Emotion\Mario]=]},
-        {"{沉思}", [=[Interface\Addons\ChatBar\Textures\Emotion\Meditate]=]},
-        {"{可怜}", [=[Interface\Addons\ChatBar\Textures\Emotion\Miserable]=]},
-        {"{好}", [=[Interface\Addons\ChatBar\Textures\Emotion\Okay]=]},
-        {"{漂亮}", [=[Interface\Addons\ChatBar\Textures\Emotion\Pretty]=]},
-        {"{吐}", [=[Interface\Addons\ChatBar\Textures\Emotion\Puke]=]},
-        {"{握手}", [=[Interface\Addons\ChatBar\Textures\Emotion\Shake]=]},
-        {"{喊}", [=[Interface\Addons\ChatBar\Textures\Emotion\Shout]=]},
-        {"{闭嘴}", [=[Interface\Addons\ChatBar\Textures\Emotion\Shuuuu]=]},
-        {"{害羞}", [=[Interface\Addons\ChatBar\Textures\Emotion\Shy]=]},
-        {"{睡觉}", [=[Interface\Addons\ChatBar\Textures\Emotion\Sleep]=]},
-        {"{微笑}", [=[Interface\Addons\ChatBar\Textures\Emotion\Smile]=]},
-        {"{吃惊}", [=[Interface\Addons\ChatBar\Textures\Emotion\Suprise]=]},
-        {"{失败}", [=[Interface\Addons\ChatBar\Textures\Emotion\Surrender]=]},
-        {"{流汗}", [=[Interface\Addons\ChatBar\Textures\Emotion\Sweat]=]},
-        {"{流泪}", [=[Interface\Addons\ChatBar\Textures\Emotion\Tear]=]},
-        {"{悲剧}", [=[Interface\Addons\ChatBar\Textures\Emotion\Tears]=]},
-        {"{想}", [=[Interface\Addons\ChatBar\Textures\Emotion\Think]=]},
-        {"{偷笑}", [=[Interface\Addons\ChatBar\Textures\Emotion\Titter]=]},
-        {"{猥琐}", [=[Interface\Addons\ChatBar\Textures\Emotion\Ugly]=]},
-        {"{胜利}", [=[Interface\Addons\ChatBar\Textures\Emotion\Victory]=]},
-        {"{雷锋}", [=[Interface\Addons\ChatBar\Textures\Emotion\Volunteer]=]},
-        {"{委屈}", [=[Interface\Addons\ChatBar\Textures\Emotion\Wronged]=]}
+    --原版暴雪提供的8个图标
+    {"{rt1}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_1]=]},
+    {"{rt2}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_2]=]},
+    {"{rt3}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_3]=]},
+    {"{rt4}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_4]=]},
+    {"{rt5}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_5]=]},
+    {"{rt6}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_6]=]},
+    {"{rt7}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_7]=]},
+    {"{rt8}", [=[Interface\TargetingFrame\UI-RaidTargetingIcon_8]=]},
+    --自定义表情
+    {"{天使}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Angel]=]},
+    {"{生气}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Angry]=]},
+    {"{大笑}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Biglaugh]=]},
+    {"{鼓掌}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Clap]=]},
+    {"{酷}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Cool]=]},
+    {"{哭}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Cry]=]},
+    {"{可爱}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Cutie]=]},
+    {"{鄙视}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Despise]=]},
+    {"{美梦}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Dreamsmile]=]},
+    {"{尴尬}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Embarrass]=]},
+    {"{邪恶}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Evil]=]},
+    {"{兴奋}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Excited]=]},
+    {"{晕}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Faint]=]},
+    {"{打架}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Fight]=]},
+    {"{流感}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Flu]=]},
+    {"{呆}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Freeze]=]},
+    {"{皱眉}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Frown]=]},
+    {"{致敬}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Greet]=]},
+    {"{鬼脸}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Grimace]=]},
+    {"{龇牙}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Growl]=]},
+    {"{开心}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Happy]=]},
+    {"{心}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Heart]=]},
+    {"{恐惧}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Horror]=]},
+    {"{生病}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Ill]=]},
+    {"{无辜}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Innocent]=]},
+    {"{功夫}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Kongfu]=]},
+    {"{花痴}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Love]=]},
+    {"{邮件}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Mail]=]},
+    {"{化妆}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Makeup]=]},
+    -- {"{马里奥}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Mario]=]},
+    {"{沉思}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Meditate]=]},
+    {"{可怜}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Miserable]=]},
+    {"{好}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Okay]=]},
+    {"{漂亮}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Pretty]=]},
+    {"{吐}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Puke]=]},
+    {"{握手}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Shake]=]},
+    {"{喊}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Shout]=]},
+    {"{闭嘴}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Shuuuu]=]},
+    {"{害羞}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Shy]=]},
+    {"{睡觉}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Sleep]=]},
+    {"{微笑}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Smile]=]},
+    {"{吃惊}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Suprise]=]},
+    {"{失败}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Surrender]=]},
+    {"{流汗}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Sweat]=]},
+    {"{流泪}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Tear]=]},
+    {"{悲剧}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Tears]=]},
+    {"{想}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Think]=]},
+    {"{偷笑}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Titter]=]},
+    {"{猥琐}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Ugly]=]},
+    {"{胜利}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Victory]=]},
+    {"{雷锋}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Volunteer]=]},
+    {"{委屈}", [=[Interface\Addons\SimpleChat\Textures\Emotion\Wronged]=]}
 }
 
 local function ChatEmoteFilter(self, event, msg, ...)
@@ -112,7 +112,7 @@ end
 
 local function CreateEmoteTableFrame()
     EmoteTableFrame = CreateFrame("Frame", "EmoteTableFrame", UIParent)
-    
+
     EmoteTableFrame:SetBackdrop(
         {
             bgFile = "Interface\\Buttons\\WHITE8x8",
@@ -127,10 +127,11 @@ local function CreateEmoteTableFrame()
     EmoteTableFrame:SetBackdropBorderColor(0.3, 0.3, 0.3)
     EmoteTableFrame:SetWidth((Config.iconSize + 6) * 12 + 10)
     EmoteTableFrame:SetHeight((Config.iconSize + 6) * 5 + 10)
-    EmoteTableFrame:SetPoint("BOTTOM", ChatFrame1EditBox, Config.offsetX, Config.offsetY)-- 表情选择框出现位置 默认30,30
+    EmoteTableFrame:SetPoint("BOTTOM", ChatFrame1EditBox, Config.offsetX, Config.offsetY)
+     -- 表情选择框出现位置 默认30,30
     EmoteTableFrame:Hide()
     EmoteTableFrame:SetFrameStrata("DIALOG")
-    
+
     local icon, row, col
     row = 1
     col = 1
@@ -167,17 +168,27 @@ function ToggleEmoteTable()
     end
 end
 
-ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", ChatEmoteFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChatEmoteFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ChatEmoteFilter)
+
+ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", ChatEmoteFilter) -- 公共频道
+ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChatEmoteFilter) -- 说
+ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ChatEmoteFilter) -- 大喊
+ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", ChatEmoteFilter) -- 团队
+ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", ChatEmoteFilter) -- 团队领袖
+ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", ChatEmoteFilter) -- 队伍
+ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", ChatEmoteFilter) -- 队伍领袖
+ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", ChatEmoteFilter) -- 公会
+
+ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", ChatEmoteFilter) -- AFK玩家自动回复
+ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", ChatEmoteFilter) -- 切勿打扰自动回复
+
+-- 副本和副本领袖
+ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", ChatEmoteFilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ChatEmoteFilter)
+-- 解析战网私聊
 ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", ChatEmoteFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", ChatEmoteFilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", ChatEmoteFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", ChatEmoteFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", ChatEmoteFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", ChatEmoteFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", ChatEmoteFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", ChatEmoteFilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", ChatEmoteFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", ChatEmoteFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", ChatEmoteFilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", ChatEmoteFilter)
+-- 解析社区聊天内容
+ChatFrame_AddMessageEventFilter("CHAT_MSG_COMMUNITIES_CHANNEL", ChatEmoteFilter)
+

@@ -53,16 +53,27 @@ local function ChatLinkIlvlFilter(self, event, msg, ...)
     return false, msg, ...
 end
 
-ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", ChatLinkIlvlFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChatLinkIlvlFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ChatLinkIlvlFilter)
+
+ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", ChatLinkIlvlFilter) -- 公共频道
+ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChatLinkIlvlFilter) -- 说
+ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ChatLinkIlvlFilter) -- 大喊
+ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", ChatLinkIlvlFilter) -- 团队
+ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", ChatLinkIlvlFilter) -- 团队领袖
+ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", ChatLinkIlvlFilter) -- 队伍
+ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", ChatLinkIlvlFilter) -- 队伍领袖
+ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", ChatLinkIlvlFilter) -- 公会
+
+ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", ChatLinkIlvlFilter) -- AFK玩家自动回复
+ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", ChatLinkIlvlFilter) -- 切勿打扰自动回复
+-- 副本和副本领袖
+ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", ChatLinkIlvlFilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ChatLinkIlvlFilter)
+-- 解析战网私聊
 ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", ChatLinkIlvlFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", ChatLinkIlvlFilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", ChatLinkIlvlFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", ChatLinkIlvlFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", ChatLinkIlvlFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", ChatLinkIlvlFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", ChatLinkIlvlFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", ChatLinkIlvlFilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", ChatLinkIlvlFilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", ChatLinkIlvlFilter)
+-- 解析社区聊天内容
+ChatFrame_AddMessageEventFilter("CHAT_MSG_COMMUNITIES_CHANNEL", ChatLinkIlvlFilter)
+--拾取信息
 ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", ChatLinkIlvlFilter)

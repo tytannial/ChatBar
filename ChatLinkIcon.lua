@@ -31,18 +31,28 @@ local function ChatIconFilter(self, event, msg, ...)
     return false, msg, ...
 end
 
-ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", ChatIconFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChatIconFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ChatIconFilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", ChatIconFilter) -- 公共频道
+ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChatIconFilter) -- 说
+ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ChatIconFilter) -- 大喊
+ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", ChatIconFilter) -- 团队
+ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", ChatIconFilter) -- 团队领袖
+ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", ChatIconFilter) -- 队伍
+ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", ChatIconFilter) -- 队伍领袖
+ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", ChatIconFilter) -- 公会
+
+ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", ChatIconFilter) -- AFK玩家自动回复
+ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", ChatIconFilter) -- 切勿打扰自动回复
+-- 副本和副本领袖
+ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", ChatIconFilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ChatIconFilter)
+-- 解析战网私聊
 ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", ChatIconFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", ChatIconFilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", ChatIconFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", ChatIconFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", ChatIconFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", ChatIconFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", ChatIconFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", ChatIconFilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", ChatIconFilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", ChatIconFilter)
+-- 解析社区聊天内容
+ChatFrame_AddMessageEventFilter("CHAT_MSG_COMMUNITIES_CHANNEL", ChatIconFilter)
+--拾取信息
 ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", ChatIconFilter)
 
 -- 鼠标图标大图显示
