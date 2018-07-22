@@ -2,20 +2,22 @@
 -- 修改者 五区-塞拉摩-Leyvaten 插件更新地址 http://nga.178.com/read.php?tid=9633520
 -- 感谢 NGA@雪白的黑牛 添加和制作，装备图标和装等显示，以及进入频道和离开按钮，以及部分代码优化。
 --
--- ChatBar = LibStub("AceAddon-3.0"):NewAddon("ChatBar", "AceEvent-3.0", "AceHook-3.0", "AceConsole-3.0")
+-- ElvUI专用版本
 --
 --[[=========================== 基本设置区域 ==========================]]
 -- 频道选择条位置瞄点
 local ChatBarOffsetX = 0 -- 相对于默认位置的X坐标偏移
-local ChatBarOffsetY = 0 -- 相对于默认位置的Y坐标偏移
+local ChatBarOffsetY = 200 -- 相对于默认位置的Y坐标偏移
 
 local AlphaOnEnter = 1.0 -- 鼠标移入按钮时的透明度
 local AlphaOnLeave = 0.2 -- 鼠标移开时按钮的透明度
 
 -- 输入框位置调整
-local UseTopInput = false -- 启用上方聊天框/如果启用了竖直则为左右 false为下/右 true为上/左
-local UseVertical = false -- 启用竖直聊天框
+local UseVertical = true -- 启用竖直聊天框
 --[[=============================== END ==============================]]
+
+local E, L, V, P, G, _ = unpack(ElvUI) -- 初始化ElvUI的闭包函数
+
 local chatFrame = SELECTED_DOCK_FRAME -- 聊天框架
 local inputbox = chatFrame.editBox -- 输入框
 
@@ -30,26 +32,16 @@ if UseVertical then
     -- 主框体宽度
     chat:SetHeight(250)
     -- 主框体高度
-    if UseTopInput then
-        chat:SetPoint("TOPRIGHT", chatFrame, "TOPLEFT", ChatBarOffsetX - 40, ChatBarOffsetY + 25)
-    else
-        chat:SetPoint("TOPLEFT", chatFrame, "TOPRIGHT", ChatBarOffsetX, ChatBarOffsetY + 25)
-    end
+    chat:SetPoint("TOPLEFT", chatFrame, "BOTTOMLEFT", ChatBarOffsetX, ChatBarOffsetY)
 else
     chat:SetWidth(300)
     -- 主框体宽度
     chat:SetHeight(23)
     -- 主框体高度
-    -- 上方输入框
-    if UseTopInput then
-        inputbox:ClearAllPoints()
-        inputbox:SetPoint("BOTTOMLEFT", chatFrame, "TOPLEFT", 0, 20)
-        inputbox:SetPoint("BOTTOMRIGHT", chatFrame, "TOPRIGHT", 0, 20)
-        chat:SetPoint("TOPLEFT", chatFrame, "BOTTOMLEFT", ChatBarOffsetX, ChatBarOffsetY - 15)
-    else
-        chat:SetPoint("TOPLEFT", chatFrame, "BOTTOMLEFT", ChatBarOffsetX, ChatBarOffsetY - 30)
-    end
+    chat:SetPoint("TOPLEFT", chatFrame, "BOTTOMLEFT", ChatBarOffsetX, ChatBarOffsetY)
 end
+
+E:CreateMover(chat,"ChatbarMover",L["聊天选择条"]) -- 将聊天条加入
 
 local function ChannelSay_OnClick()
     ChatFrame_OpenChat("/s " .. inputbox:GetText(), chatFrame)
@@ -130,7 +122,7 @@ local function CreateChannelButton(data, index)
     -- 按钮宽度
     frame:SetHeight(23)
     -- 按钮高度
-    self:SetAlpha(AlphaOnLeave)
+    frame:SetAlpha(AlphaOnLeave)
 
     frame:SetScript(
         "OnEnter",
