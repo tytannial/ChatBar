@@ -15,6 +15,11 @@ local AlphaOnLeave = 0.2 -- 鼠标移开时按钮的透明度
 -- 输入框位置调整
 local UseTopInput = false -- 启用上方聊天框/如果启用了竖直则为左右 false为下/右 true为上/左
 local UseVertical = false -- 启用竖直聊天框
+
+-- 是否可移动的标记
+
+local IsMovable = false -- 没事干别动这个，你改成ture那么进入游戏后聊天条就是可以移动的
+
 --[[=============================== END ==============================]]
 local chatFrame = SELECTED_DOCK_FRAME -- 聊天框架
 local inputbox = chatFrame.editBox -- 输入框
@@ -23,12 +28,12 @@ COLORSCHEME_BORDER = {0.3, 0.3, 0.3, 1}
 -- 边框颜色
 
 -- 主框架初始化
-local chat = CreateFrame("Frame", "chat", UIParent)
+local chat = CreateFrame("Frame", "SimpleChatBar", UIParent)
 
 if UseVertical then
     chat:SetWidth(30)
     -- 主框体宽度
-    chat:SetHeight(250)
+    chat:SetHeight(300)
     -- 主框体高度
     if UseTopInput then
         chat:SetPoint("TOPRIGHT", chatFrame, "TOPLEFT", ChatBarOffsetX - 40, ChatBarOffsetY + 25)
@@ -36,7 +41,7 @@ if UseVertical then
         chat:SetPoint("TOPLEFT", chatFrame, "TOPRIGHT", ChatBarOffsetX, ChatBarOffsetY + 25)
     end
 else
-    chat:SetWidth(300)
+    chat:SetWidth(360)
     -- 主框体宽度
     chat:SetHeight(23)
     -- 主框体高度
@@ -50,6 +55,11 @@ else
         chat:SetPoint("TOPLEFT", chatFrame, "BOTTOMLEFT", ChatBarOffsetX, ChatBarOffsetY - 30)
     end
 end
+
+chat:SetMovable(true)
+chat:RegisterForDrag("LeftButton")
+chat:SetScript("OnDragStart", chat.StartMoving)
+chat:SetScript("OnDragStop", chat.StopMovingOrSizing)
 
 local function ChannelSay_OnClick()
     ChatFrame_OpenChat("/s " .. inputbox:GetText(), chatFrame)
@@ -110,6 +120,28 @@ local function Report_OnClick()
     inputbox:SetText(StatReport())
 end
 
+local function Movelock_OnClick(self, button)
+    if IsMovable then
+        print("|cffd20000锁定聊天条|r")
+        IsMovable = false
+        chat:SetBackdrop(nil)
+    else
+        print("|cff00d200解锁聊天条|r")
+        IsMovable = true
+        chat:SetBackdrop(
+            {
+                bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+                edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+                tile = true,
+                tileSize = 16,
+                edgeSize = 16,
+                insets = {left = 4, right = 4, top = 4, bottom = 4}
+            }
+        )
+    end
+    chat:EnableMouse(IsMovable)
+end
+
 local ChannelButtons = {
     {name = "say", text = "说", color = {1.00, 1.00, 1.00}, callback = ChannelSay_OnClick},
     {name = "yell", text = "喊", color = {1.00, 0.25, 0.25}, callback = ChannelYell_OnClick},
@@ -121,7 +153,8 @@ local ChannelButtons = {
     {name = "world", text = "世", color = {0.78, 1.00, 0.59}, callback = ChannelWorld_OnClick},
     {name = "emote", text = "表", color = {1.00, 0.50, 1.00}, callback = ChatEmote_OnClick},
     {name = "roll", text = "骰", color = {1.00, 1.00, 0.00}, callback = Roll_OnClick},
-    {name = "report", text = "报", color = {0.80, 0.30, 0.30}, callback = Report_OnClick}
+    {name = "report", text = "报", color = {0.80, 0.30, 0.30}, callback = Report_OnClick},
+    {name = "movelock", text = "锁", color = {0.20, 0.20, 0.80}, callback = Movelock_OnClick}
 }
 
 local function CreateChannelButton(data, index)
@@ -130,7 +163,7 @@ local function CreateChannelButton(data, index)
     -- 按钮宽度
     frame:SetHeight(23)
     -- 按钮高度
-    self:SetAlpha(AlphaOnLeave)
+    frame:SetAlpha(AlphaOnLeave)
 
     frame:SetScript(
         "OnEnter",
