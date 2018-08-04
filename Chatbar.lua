@@ -1,25 +1,13 @@
--- 原作者：Nevo 邮箱地址 : Neavo7@gmail.com
--- 修改者 五区-塞拉摩-Leyvaten 插件更新地址 http://nga.178.com/read.php?tid=9633520
--- 感谢 NGA@雪白的黑牛 添加和制作，装备图标和装等显示，以及进入频道和离开按钮，以及部分代码优化。
---
--- ChatBar = LibStub("AceAddon-3.0"):NewAddon("ChatBar", "AceEvent-3.0", "AceHook-3.0", "AceConsole-3.0")
---
---[[=========================== 基本设置区域 ==========================]]
--- 频道选择条位置瞄点
-local ChatBarOffsetX = 0 -- 相对于默认位置的X坐标偏移
-local ChatBarOffsetY = 0 -- 相对于默认位置的Y坐标偏移
+--[[
+	Chatbar.lua
+        聊天条代码
+    插件更新地址 http://nga.178.com/read.php?tid=9633520
+--]]
 
-local AlphaOnEnter = 1.0 -- 鼠标移入按钮时的透明度
-local AlphaOnLeave = 0.2 -- 鼠标移开时按钮的透明度
-
--- 输入框位置调整
-local UseTopInput = false -- 启用上方聊天框/如果启用了竖直则为左右 false为下/右 true为上/左
-local UseVertical = false -- 启用竖直聊天框
-
+--[[=========================== 变量区 ==========================]]
 -- 是否可移动的标记
-
 local IsMovable = false -- 没事干别动这个，你改成ture那么进入游戏后聊天条就是可以移动的
-
+local Config = SimpleChat_Config
 --[[=============================== END ==============================]]
 local chatFrame = SELECTED_DOCK_FRAME -- 聊天框架
 local inputbox = chatFrame.editBox -- 输入框
@@ -28,38 +16,7 @@ COLORSCHEME_BORDER = {0.3, 0.3, 0.3, 1}
 -- 边框颜色
 
 -- 主框架初始化
-local chat = CreateFrame("Frame", "SimpleChatBar", UIParent)
-
-if UseVertical then
-    chat:SetWidth(30)
-    -- 主框体宽度
-    chat:SetHeight(300)
-    -- 主框体高度
-    if UseTopInput then
-        chat:SetPoint("TOPRIGHT", chatFrame, "TOPLEFT", ChatBarOffsetX - 40, ChatBarOffsetY + 25)
-    else
-        chat:SetPoint("TOPLEFT", chatFrame, "TOPRIGHT", ChatBarOffsetX, ChatBarOffsetY + 25)
-    end
-else
-    chat:SetWidth(360)
-    -- 主框体宽度
-    chat:SetHeight(23)
-    -- 主框体高度
-    -- 上方输入框
-    if UseTopInput then
-        inputbox:ClearAllPoints()
-        inputbox:SetPoint("BOTTOMLEFT", chatFrame, "TOPLEFT", 0, 20)
-        inputbox:SetPoint("BOTTOMRIGHT", chatFrame, "TOPRIGHT", 0, 20)
-        chat:SetPoint("TOPLEFT", chatFrame, "BOTTOMLEFT", ChatBarOffsetX, ChatBarOffsetY - 15)
-    else
-        chat:SetPoint("TOPLEFT", chatFrame, "BOTTOMLEFT", ChatBarOffsetX, ChatBarOffsetY - 30)
-    end
-end
-
-chat:SetMovable(true)
-chat:RegisterForDrag("LeftButton")
-chat:SetScript("OnDragStart", chat.StartMoving)
-chat:SetScript("OnDragStop", chat.StopMovingOrSizing)
+local ChatBar = CreateFrame("Frame", "SimpleChatBar", UIParent)
 
 local function ChannelSay_OnClick()
     ChatFrame_OpenChat("/s " .. inputbox:GetText(), chatFrame)
@@ -99,10 +56,10 @@ local function ChannelWorld_OnClick(self, button)
             JoinPermanentChannel("大脚世界频道", nil, 1, 1)
             ChatFrame_RemoveMessageGroup(chatFrame, "CHANNEL")
             ChatFrame_AddChannel(chatFrame, "大脚世界频道")
-            print("|cff00d200已加入大脚世界频道|r")
+            print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200已加入大脚世界频道|r")
         else
             LeaveChannelByName("大脚世界频道")
-            print("|cffd20000已离开大脚世界频道|r")
+            print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cffd20000已离开大脚世界频道|r")
         end
     else
         local channel, _, _ = GetChannelName("大脚世界频道")
@@ -121,25 +78,46 @@ local function Report_OnClick()
 end
 
 local function Movelock_OnClick(self, button)
-    if IsMovable then
-        print("|cffd20000锁定聊天条|r")
-        IsMovable = false
-        chat:SetBackdrop(nil)
-    else
-        print("|cff00d200解锁聊天条|r")
-        IsMovable = true
-        chat:SetBackdrop(
-            {
-                bgFile = "Interface/Tooltips/UI-Tooltip-Background",
-                edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
-                tile = true,
-                tileSize = 16,
-                edgeSize = 16,
-                insets = {left = 4, right = 4, top = 4, bottom = 4}
-            }
-        )
+    if button == "LeftButton" then
+        if IsMovable then
+            print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cffd20000锁定聊天条|r")
+            IsMovable = false
+            ChatBar:SetBackdrop(nil)
+        else
+            print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200解锁聊天条|r")
+            IsMovable = true
+            ChatBar:SetBackdrop(
+                {
+                    bgFile = "Interface/DialogFrame/UI-DialogBox-Background",
+                    edgeFile = "Interface/DialogFrame/UI-DialogBox-Border",
+                    tile = true,
+                    tileSize = 16,
+                    edgeSize = 16,
+                    insets = {left = 4, right = 4, top = 4, bottom = 4}
+                }
+            )
+        end
+        ChatBar:EnableMouse(IsMovable)
+    elseif button == "MiddleButton" then
+        if IsMovable == false then
+            return
+        end
+
+        ChatBar:ClearAllPoints()
+        if Config.UseVertical then
+            if Config.UseTopChatbar then
+                ChatBar:SetPoint("TOPRIGHT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX - 30, Config.ChatBarOffsetY + 25)
+            else
+                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "TOPRIGHT", Config.ChatBarOffsetX + 30, Config.ChatBarOffsetY + 25)
+            end
+        else
+            if Config.UseTopChatbar then
+                ChatBar:SetPoint("BOTTOMLEFT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY + 30)
+            else
+                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "BOTTOMLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY - 30)
+            end
+        end
     end
-    chat:EnableMouse(IsMovable)
 end
 
 local ChannelButtons = {
@@ -158,49 +136,91 @@ local ChannelButtons = {
 }
 
 local function CreateChannelButton(data, index)
-    local frame = CreateFrame("Button", "frameName", chat)
-    frame:SetWidth(23)
+    local frame = CreateFrame("Button", "frameName", ChatBar)
+    frame:SetWidth(22)
     -- 按钮宽度
-    frame:SetHeight(23)
+    frame:SetHeight(22)
     -- 按钮高度
-    frame:SetAlpha(AlphaOnLeave)
+    frame:SetAlpha(Config.AlphaOnLeave)
 
     frame:SetScript(
         "OnEnter",
         function(self)
-            self:SetAlpha(AlphaOnEnter)
+            self:SetAlpha(Config.AlphaOnEnter)
         end
     )
     frame:SetScript(
         "OnLeave",
         function(self)
-            self:SetAlpha(AlphaOnLeave)
+            self:SetAlpha(Config.AlphaOnLeave)
         end
     )
 
-    if UseVertical then
-        -- 锚点 25为间距
-        frame:SetPoint("TOP", chat, "TOP", 0, (1 - index) * 25)
+    if Config.UseVertical then
+        frame:SetPoint("TOP", ChatBar, "TOP", 0, (1 - index) * Config.DistanceVertical)
     else
-        -- 锚点 30为间距
-        frame:SetPoint("LEFT", chat, "LEFT", 10 + (index - 1) * 30, 0)
+        frame:SetPoint("LEFT", ChatBar, "LEFT", 10 + (index - 1) * Config.DistanceHorizontal, 0)
     end
 
     frame:RegisterForClicks("AnyUp")
     frame:SetScript("OnClick", data.callback)
-    frameText = frame:CreateFontString(data.name .. "Text", "OVERLAY")
-    frameText:SetFont("fonts\\ARHei.ttf", 15, "OUTLINE")
-    -- 字体设置
-    frameText:SetJustifyH("CENTER")
-    frameText:SetWidth(25)
-    frameText:SetHeight(25)
-    frameText:SetText(data.text)
     -- 显示的文字
+    frameText = frame:CreateFontString(data.name .. "Text", "OVERLAY")
+    -- 字体设置
+    frameText:SetFont(STANDARD_TEXT_FONT, 15, "OUTLINE")
+
+    frameText:SetJustifyH("CENTER")
+    frameText:SetWidth(26)
+    frameText:SetHeight(26)
+    frameText:SetText(data.text)
     frameText:SetPoint("CENTER", 0, 0)
-    frameText:SetTextColor(data.color[1], data.color[2], data.color[3])
+
     -- 文字按钮的颜色
+    frameText:SetTextColor(data.color[1], data.color[2], data.color[3])
 end
 
-for i = 1, #ChannelButtons do -- 对非战斗记录聊天框的信息进行处理
-    CreateChannelButton(ChannelButtons[i], i)
+function SimpleChat_InitChatBar()
+    -- 使用竖直布局
+    if Config.UseVertical then
+        -- 主框体宽度
+        ChatBar:SetWidth(30)
+        -- 主框体高度
+        ChatBar:SetHeight(#ChannelButtons * Config.DistanceVertical + 10)
+    else
+        -- 主框体宽度
+        ChatBar:SetWidth(#ChannelButtons * Config.DistanceHorizontal + 10)
+        -- 主框体高度
+        ChatBar:SetHeight(30)
+    end
+
+    -- 上方聊天输入框
+    if Config.UseTopInput then
+        inputbox:ClearAllPoints()
+        inputbox:SetPoint("BOTTOMLEFT", chatFrame, "TOPLEFT", 0, 20)
+        inputbox:SetPoint("BOTTOMRIGHT", chatFrame, "TOPRIGHT", 0, 20)
+    end
+
+    -- 位置设定
+    if Config.UseVertical then
+        if Config.UseTopChatbar then
+            ChatBar:SetPoint("TOPRIGHT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX - 30, Config.ChatBarOffsetY + 25)
+        else
+            ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "TOPRIGHT", Config.ChatBarOffsetX + 30, Config.ChatBarOffsetY + 25)
+        end
+    else
+        if Config.UseTopChatbar then
+            ChatBar:SetPoint("BOTTOMLEFT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY + 30)
+        else
+            ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "BOTTOMLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY - 30)
+        end
+    end
+
+    ChatBar:SetMovable(true)
+    ChatBar:RegisterForDrag("LeftButton")
+    ChatBar:SetScript("OnDragStart", ChatBar.StartMoving)
+    ChatBar:SetScript("OnDragStop", ChatBar.StopMovingOrSizing)
+
+    for i = 1, #ChannelButtons do -- 对非战斗记录聊天框的信息进行处理
+        CreateChannelButton(ChannelButtons[i], i)
+    end
 end

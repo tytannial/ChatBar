@@ -1,5 +1,9 @@
---[[============================== 属性通报 ==========================]] --
-
+--[[
+	StatReport.lua
+        属性通报
+        TODO:适配Bfa正式版本，汇报神器项链、武器和盾牌。
+        插件更新地址 http://nga.178.com/read.php?tid=9633520
+--]]
 -- 本地化专精
 local function Talent()
     local Spec = GetSpecialization()
@@ -17,6 +21,7 @@ local function HealText()
     end
 end
 
+-- 神器等级
 local function ArtifactLevel()
     local HPlv = " "
     if C_ArtifactUI.GetEquippedArtifactInfo() then

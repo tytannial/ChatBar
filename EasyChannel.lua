@@ -1,5 +1,9 @@
--- 提取自网易有爱163Chat
--- 修改者 五区-塞拉摩-Leyvaten 插件更新地址 http://nga.178.com/read.php?tid=9633520
+--[[
+	EasyChannel.lua
+		频道和密语对象的快速切换
+        提取自网易有爱163Chat
+        插件更新地址 http://nga.178.com/read.php?tid=9633520
+--]]
 
 function ChatEdit_CustomTabPressed(...)
     return ChatEdit_CustomTabPressed_Inner(...)
