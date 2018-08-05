@@ -17,7 +17,7 @@ COLORSCHEME_BORDER = {0.3, 0.3, 0.3, 1}
 -- 边框颜色
 
 -- 主框架初始化
-local ChatBar = CreateFrame("Frame", "SimpleChatBar", UIParent)
+local ChatBar = CreateFrame("Frame", nil, UIParent)
 
 local function ChannelSay_OnClick()
     ChatFrame_OpenChat("/s " .. inputbox:GetText(), chatFrame)
@@ -78,49 +78,6 @@ local function Report_OnClick()
     inputbox:SetText(StatReport())
 end
 
-local function Movelock_OnClick(self, button)
-    if button == "LeftButton" then
-        if IsMovable then
-            print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cffd20000锁定聊天条|r")
-            IsMovable = false
-            ChatBar:SetBackdrop(nil)
-        else
-            print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200解锁聊天条|r")
-            IsMovable = true
-            ChatBar:SetBackdrop(
-                {
-                    bgFile = "Interface/DialogFrame/UI-DialogBox-Background",
-                    edgeFile = "Interface/DialogFrame/UI-DialogBox-Border",
-                    tile = true,
-                    tileSize = 16,
-                    edgeSize = 16,
-                    insets = {left = 4, right = 4, top = 4, bottom = 4}
-                }
-            )
-        end
-        ChatBar:EnableMouse(IsMovable)
-    elseif button == "MiddleButton" then
-        if IsMovable == false then
-            return
-        end
-
-        ChatBar:ClearAllPoints()
-        if Config.UseVertical then
-            if Config.UseTopChatbar then
-                ChatBar:SetPoint("TOPRIGHT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX - 30, Config.ChatBarOffsetY + 25)
-            else
-                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "TOPRIGHT", Config.ChatBarOffsetX + 30, Config.ChatBarOffsetY + 25)
-            end
-        else
-            if Config.UseTopChatbar then
-                ChatBar:SetPoint("BOTTOMLEFT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY + 30)
-            else
-                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "BOTTOMLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY - 30)
-            end
-        end
-    end
-end
-
 local ChannelButtons = {
     {name = "say", text = "说", color = {1.00, 1.00, 1.00}, callback = ChannelSay_OnClick},
     {name = "yell", text = "喊", color = {1.00, 0.25, 0.25}, callback = ChannelYell_OnClick},
@@ -132,8 +89,7 @@ local ChannelButtons = {
     {name = "world", text = "世", color = {0.78, 1.00, 0.59}, callback = ChannelWorld_OnClick},
     {name = "emote", text = "表", color = {1.00, 0.50, 1.00}, callback = ChatEmote_OnClick},
     {name = "roll", text = "骰", color = {1.00, 1.00, 0.00}, callback = Roll_OnClick},
-    {name = "report", text = "报", color = {0.80, 0.30, 0.30}, callback = Report_OnClick},
-    {name = "movelock", text = "锁", color = {0.20, 0.20, 0.80}, callback = Movelock_OnClick}
+    {name = "report", text = "报", color = {0.80, 0.30, 0.30}, callback = Report_OnClick}
 }
 
 local function CreateChannelButton(data, index)
@@ -215,11 +171,6 @@ function SimpleChat_InitChatBar()
             ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "BOTTOMLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY - 30)
         end
     end
-
-    ChatBar:SetMovable(true)
-    ChatBar:RegisterForDrag("LeftButton")
-    ChatBar:SetScript("OnDragStart", ChatBar.StartMoving)
-    ChatBar:SetScript("OnDragStop", ChatBar.StopMovingOrSizing)
 
     for i = 1, #ChannelButtons do -- 对非战斗记录聊天框的信息进行处理
         CreateChannelButton(ChannelButtons[i], i)
