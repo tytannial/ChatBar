@@ -1,25 +1,15 @@
-﻿-- 修改者 五区-塞拉摩-Leyvaten 插件更新地址 http://nga.178.com/read.php?tid=9633520
---[[
-配置选项
-iconSize 表情大小你可以根据聊天字号调整
-offsetX 标情况相当于输入框中心的X偏移
-offsetY 标情况相当于输入框中心的Y偏移
-enableEmoteInput 允许解析聊天输入表情
-enableBubbleEmote 允许解析聊天泡泡表情
-]]
-local Config = {
-    iconSize = 18,
-    offsetX = 30,
-    offsetY = 30,
-    enableEmoteInput = true
-    -- ,enableBubbleEmote = false -- 这个功能会扫描所有聊天泡泡框架解析表情，容易扫描到被保护的框架，所以暂时移除了。
-}
+﻿--[[
+	ChatEmote.lua
+        聊天表情相关代码
+    插件更新地址 http://nga.178.com/read.php?tid=9633520
+--]]
+local Config = SimpleChat_Config
 
 -- 表情选择器框架
 local EmoteTableFrame
 
 -- 表情解析规则
-local fmtstring = format("\124T%%s:%d\124t", max(floor(select(2, SELECTED_CHAT_FRAME:GetFont())), Config.iconSize))
+local fmtstring = format("\124T%%s:%d\124t", max(floor(select(2, SELECTED_CHAT_FRAME:GetFont())), Config.EmoteIconSize))
 
 -- 自定义表情开始的序号
 local customEmoteStartIndex = 9
@@ -90,10 +80,12 @@ local emotes = {
 }
 
 local function ChatEmoteFilter(self, event, msg, ...)
-    for i = customEmoteStartIndex, #emotes do
-        if msg:find(emotes[i][1]) then
-            msg = msg:gsub(emotes[i][1], format(fmtstring, emotes[i][2]), 1)
-            break
+    if (SimpleChat_Config and SimpleChat_Config.EnableEmoteInput) then
+        for i = customEmoteStartIndex, #emotes do
+            if msg:find(emotes[i][1]) then
+                msg = msg:gsub(emotes[i][1], format(fmtstring, emotes[i][2]), 1)
+                break
+            end
         end
     end
     return false, msg, ...
@@ -110,7 +102,7 @@ local function EmoteIconMouseUp(frame, button)
     ToggleEmoteTable()
 end
 
-local function CreateEmoteTableFrame()
+function SimpleChat_InitEmoteTableFrame()
     EmoteTableFrame = CreateFrame("Frame", "EmoteTableFrame", UIParent)
 
     EmoteTableFrame:SetBackdrop(
@@ -125,10 +117,10 @@ local function CreateEmoteTableFrame()
     )
     EmoteTableFrame:SetBackdropColor(0.05, 0.05, 0.05, 0.8)
     EmoteTableFrame:SetBackdropBorderColor(0.3, 0.3, 0.3)
-    EmoteTableFrame:SetWidth((Config.iconSize + 6) * 12 + 10)
-    EmoteTableFrame:SetHeight((Config.iconSize + 6) * 5 + 10)
-    EmoteTableFrame:SetPoint("BOTTOM", ChatFrame1EditBox, Config.offsetX, Config.offsetY)
-     -- 表情选择框出现位置 默认30,30
+    EmoteTableFrame:SetWidth((Config.EmoteIconListSize + 6) * 12 + 10)
+    EmoteTableFrame:SetHeight((Config.EmoteIconListSize + 6) * 5 + 10)
+    EmoteTableFrame:SetPoint("BOTTOM", ChatFrame1EditBox, Config.EmoteOffsetX, Config.EmoteOffsetY)
+    -- 表情选择框出现位置 默认30,30
     EmoteTableFrame:Hide()
     EmoteTableFrame:SetFrameStrata("DIALOG")
 
@@ -139,14 +131,18 @@ local function CreateEmoteTableFrame()
         text = emotes[i][1]
         texture = emotes[i][2]
         icon = CreateFrame("Frame", format("IconButton%d", i), EmoteTableFrame)
-        icon:SetWidth(Config.iconSize + 6)
-        icon:SetHeight(Config.iconSize + 6)
+        icon:SetWidth(Config.EmoteIconListSize + 6)
+        icon:SetHeight(Config.EmoteIconListSize + 6)
         icon.text = text
         icon.texture = icon:CreateTexture(nil, "ARTWORK")
         icon.texture:SetTexture(texture)
         icon.texture:SetAllPoints(icon)
         icon:Show()
-        icon:SetPoint("TOPLEFT", 5 + (col - 1) * (Config.iconSize + 6), -5 - (row - 1) * (Config.iconSize + 6))
+        icon:SetPoint(
+            "TOPLEFT",
+            5 + (col - 1) * (Config.EmoteIconListSize + 6),
+            -5 - (row - 1) * (Config.EmoteIconListSize + 6)
+        )
         icon:SetScript("OnMouseUp", EmoteIconMouseUp)
         icon:EnableMouse(true)
         col = col + 1
@@ -158,16 +154,12 @@ local function CreateEmoteTableFrame()
 end
 
 function ToggleEmoteTable()
-    if (not EmoteTableFrame) then
-        CreateEmoteTableFrame()
-    end
     if (EmoteTableFrame:IsShown()) then
         EmoteTableFrame:Hide()
     else
         EmoteTableFrame:Show()
     end
 end
-
 
 ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", ChatEmoteFilter) -- 公共频道
 ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChatEmoteFilter) -- 说
@@ -191,4 +183,3 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", ChatEmoteFilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", ChatEmoteFilter)
 -- 解析社区聊天内容
 ChatFrame_AddMessageEventFilter("CHAT_MSG_COMMUNITIES_CHANNEL", ChatEmoteFilter)
-
