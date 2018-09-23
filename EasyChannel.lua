@@ -95,7 +95,7 @@ function ChatEdit_CustomTabPressed_Inner(self)
             --记录之前的密语对象，以便后续切回
             self:SetAttribute("chatType", chatTypeBeforeSwitch or "SAY")
             ChatEdit_UpdateHeader(self)
-            chatTypeBeforeSwitch = currChatType
+            chatTypeBeforeSwitch = "WHISPER"
             tellTargetBeforeSwitch = self:GetAttribute("tellTarget")
             return --这里和下面不同，这里可以不返回true
         else

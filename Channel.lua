@@ -213,13 +213,6 @@ local function AddMessage(frame, text, ...)
 end
 
 --RemoveChatWindowMessages(ChatFrame1,"messageGroup") -- 屏蔽出入频道信息
-for i = 1, NUM_CHAT_WINDOWS do -- 对非战斗记录聊天框的信息进行处理
-    if i ~= 2 then -- 跳过战斗记录框
-        local f = _G[format("%s%d", "ChatFrame", i)]
-        newAddMsg[format("%s%d", "ChatFrame", i)] = f.AddMessage
-        f.AddMessage = AddMessage
-    end
-end
 
 -- 显示信息到输入框
 local function showMessage(msg, button)
@@ -263,4 +256,15 @@ function SimpleChat_InitChannel()
         end
         _SetItemRef(link, text, button, chatFrame)
     end
+	for i = 1, NUM_CHAT_WINDOWS do -- 对非战斗记录聊天框的信息进行处理
+		if i ~= 2 then -- 跳过战斗记录框
+			local f = _G[format("%s%d", "ChatFrame", i)]
+			newAddMsg[format("%s%d", "ChatFrame", i)] = f.AddMessage
+			f.AddMessage = AddMessage
+		end
+	end
+	if not GuildControlUIRankSettingsFrameRosterLabel then
+		GuildControlUIRankSettingsFrameRosterLabel = CreateFrame("frame")
+		GuildControlUIRankSettingsFrameRosterLabel:Hide()
+	end
 end

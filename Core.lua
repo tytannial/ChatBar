@@ -47,3 +47,10 @@ end
 
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", SimpleChat_Loaded)
+
+SimpleChat_Config.panel = CreateFrame("Frame", "SimpleChat", UIParent)
+-- Register in the Interface Addon Options GUI
+-- Set the name for the Category for the Options Panel
+SimpleChat_Config.panel.name = "简易聊天增强"
+-- Add the panel to the Interface Options
+InterfaceOptions_AddCategory(SimpleChat_Config.panel)
