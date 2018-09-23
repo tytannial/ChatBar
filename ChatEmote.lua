@@ -105,6 +105,12 @@ end
 function SimpleChat_InitEmoteTableFrame()
     EmoteTableFrame = CreateFrame("Frame", "EmoteTableFrame", UIParent)
 
+    EmoteTableFrame:SetMovable(true)
+    EmoteTableFrame:RegisterForDrag("LeftButton")
+    EmoteTableFrame:SetScript("OnDragStart", EmoteTableFrame.StartMoving)
+    EmoteTableFrame:SetScript("OnDragStop", EmoteTableFrame.StopMovingOrSizing)
+    EmoteTableFrame:EnableMouse(true)
+
     EmoteTableFrame:SetBackdrop(
         {
             bgFile = "Interface\\Buttons\\WHITE8x8",

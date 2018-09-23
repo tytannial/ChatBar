@@ -5,6 +5,7 @@
 ## Notes: Simple ChatBar with timesamp and copy function.
 ## Notes-zhCN: 右键【世】可以屏蔽/打开世界频道
 ## Notes-zhTW: 右鍵【世】可以屏蔽/打開世界頻道.
+## SavedVariablesPerCharacter: SimpleChatChrConfig
 
 # 配置和设定-必要
 Core.lua

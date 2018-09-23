@@ -17,6 +17,7 @@ COLORSCHEME_BORDER = {0.3, 0.3, 0.3, 1}
 
 -- 主框架初始化
 local ChatBar = CreateFrame("Frame", "SimpleChatBar", UIParent)
+SimpleChatBar = ChatBar
 
 local function ChannelSay_OnClick()
     ChatFrame_OpenChat("/s " .. inputbox:GetText(), chatFrame)
@@ -83,6 +84,12 @@ local function Movelock_OnClick(self, button)
             print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cffd20000锁定聊天条|r")
             IsMovable = false
             ChatBar:SetBackdrop(nil)
+
+            local point, relativeTo, relativePoint, xOfs, yOfs = ChatBar:GetPoint()
+
+            SimpleChatChrConfig = {
+                Position = {point = point, relativeTo = relativeTo, relativePoint = relativePoint, xOfs = xOfs, yOfs = yOfs}
+            }
         else
             print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200解锁聊天条|r")
             IsMovable = true
@@ -102,8 +109,7 @@ local function Movelock_OnClick(self, button)
         if IsMovable == false then
             return
         end
-
-        ChatBar:ClearAllPoints()
+        -- ChatBar:ClearAllPoints()
         if Config.UseVertical then
             if Config.UseTopChatbar then
                 ChatBar:SetPoint("TOPRIGHT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX - 30, Config.ChatBarOffsetY + 25)
@@ -201,18 +207,28 @@ function SimpleChat_InitChatBar()
     end
 
     -- 位置设定
-    if Config.UseVertical then
-        if Config.UseTopChatbar then
-            ChatBar:SetPoint("TOPRIGHT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX - 30, Config.ChatBarOffsetY + 25)
+    if SimpleChatChrConfig.Position == nil then
+        if Config.UseVertical then
+            if Config.UseTopChatbar then
+                ChatBar:SetPoint("TOPRIGHT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX - 30, Config.ChatBarOffsetY + 25)
+            else
+                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "TOPRIGHT", Config.ChatBarOffsetX + 30, Config.ChatBarOffsetY + 25)
+            end
         else
-            ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "TOPRIGHT", Config.ChatBarOffsetX + 30, Config.ChatBarOffsetY + 25)
+            if Config.UseTopChatbar then
+                ChatBar:SetPoint("BOTTOMLEFT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY + 30)
+            else
+                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "BOTTOMLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY - 30)
+            end
         end
+        print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r 聊天条位置初始化完毕")
     else
-        if Config.UseTopChatbar then
-            ChatBar:SetPoint("BOTTOMLEFT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY + 30)
-        else
-            ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "BOTTOMLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY - 30)
-        end
+        local point = SimpleChatChrConfig.Position.point
+        local relativeTo = SimpleChatChrConfig.Position.relativeTo
+        local relativePoint = SimpleChatChrConfig.Position.relativePoint
+        local xOfs = SimpleChatChrConfig.Position.xOfs
+        local yOfs = SimpleChatChrConfig.Position.yOfs
+        ChatBar:SetPoint(point, relativeTo, relativePoint, xOfs, yOfs)
     end
 
     ChatBar:SetMovable(true)

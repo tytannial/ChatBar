@@ -4,6 +4,8 @@
         插件更新地址 http://nga.178.com/read.php?tid=9633520
 --]]
 --[[=========================== 基本设置区域 ==========================]]
+SimpleChatBar = nil -- 聊天条
+
 SimpleChat_Config = {
     -- 聊天条
     UseTopInput = false, -- 启用上方输入框
@@ -14,7 +16,7 @@ SimpleChat_Config = {
     DistanceVertical = 25, -- 垂直排列间隔
     DistanceHorizontal = 30, -- 水平排列间隔
     AlphaOnEnter = 1.0, -- 鼠标移入按钮时的透明度
-    AlphaOnLeave = 0.2, -- 鼠标移开时按钮的透明度
+    AlphaOnLeave = 0.5, -- 鼠标移开时按钮的透明度
     -- 聊天物品链接增强
     ShowChatLinkIlvl = true, -- 显示物品链接装等
     ShowChatLinkIcon = true, -- 显示物品链接图标
@@ -34,6 +36,19 @@ local Name, Addon = ...
 local f = CreateFrame("Frame")
 
 local function SimpleChat_Loaded(self, event, addon)
+    if event == "ADDON_LOADED" and addon == "SimpleChat" then
+        if SimpleChatChrConfig == nil then
+            SimpleChatChrConfig = {Position = nil}
+        end
+    end
+
+    if event == "PLAYER_LOGOUT" and addon == "SimpleChat" then
+        local point, relativeTo, relativePoint, xOfs, yOfs = SimpleChatBar:GetPoint()
+        SimpleChatChrConfig = {
+            Position = {point = point, relativeTo = relativeTo, relativePoint = relativePoint, xOfs = xOfs, yOfs = yOfs}
+        }
+    end
+
     -- 加载功能模块
     SimpleChat_InitChatBar() -- 加载聊天条
     SimpleChat_InitChannel() -- 频道增强
@@ -46,6 +61,7 @@ local function SimpleChat_Loaded(self, event, addon)
 end
 
 f:RegisterEvent("ADDON_LOADED")
+f:RegisterEvent("PLAYER_LOGOUT")
 f:SetScript("OnEvent", SimpleChat_Loaded)
 
 SimpleChat_Config.panel = CreateFrame("Frame", "SimpleChat", UIParent)
