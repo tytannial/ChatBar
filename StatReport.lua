@@ -4,6 +4,28 @@
         TODO:适配Bfa正式版本，汇报神器项链、武器和盾牌。
         插件更新地址 http://nga.178.com/read.php?tid=9633520
 --]]
+local slotNames = {
+    "HeadSlot",
+    "NeckSlot",
+    "ShoulderSlot",
+    "BackSlot",
+    "ChestSlot",
+    "ShirtSlot",
+    "TabardSlot",
+    "WristSlot",
+    "HandsSlot",
+    "WaistSlot",
+    "LegsSlot",
+    "FeetSlot",
+    "Finger0Slot",
+    "Finger1Slot",
+    "Trinket0Slot",
+    "Trinket1Slot",
+    "MainHandSlot",
+    "SecondaryHandSlot",
+    "AmmoSlot"
+}
+
 -- 本地化专精
 local function Talent()
     local Spec = GetSpecialization()
@@ -23,11 +45,31 @@ end
 
 -- 神器等级
 local function ArtifactLevel()
-    local HPlv = " "
-    if C_ArtifactUI.GetEquippedArtifactInfo() then
-        HPlv = select(6, C_ArtifactUI.GetEquippedArtifactInfo())
+    local currentLevel = " "
+    local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
+    if azeriteItemLocation then
+        currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
     end
-    return HPlv
+    return currentLevel
+end
+
+-- 特质装等级
+local function AzeriteItemLevel(slotNum)
+    local currentLevel = "0"
+
+    local slotId = GetInventorySlotInfo(slotNames[slotNum])
+    local itemLink = GetInventoryItemLink("player", slotId)
+
+    if itemLink then
+        local itemLoc
+        if ItemLocation then
+            itemLoc = ItemLocation:CreateFromEquipmentSlot(slotId)
+        end
+        if C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemLoc) then
+            return select(4, GetItemInfo(itemLink))
+        end
+    end
+    return currentLevel
 end
 
 -- 基础属性
@@ -37,7 +79,10 @@ local function BaseInfo()
     BaseStat = BaseStat .. ("[%s] "):format(Talent())
     BaseStat = BaseStat .. ("最高装等:%.1f 当前:%.1f "):format(GetAverageItemLevel())
     BaseStat = BaseStat .. ("血量:%s "):format(HealText())
-    BaseStat = BaseStat .. ("神器:%s "):format(ArtifactLevel())
+    BaseStat = BaseStat .. ("神器:%s "):format(ArtifactLevel()) -- 项链等级
+    BaseStat = BaseStat .. ("头部:%s "):format(AzeriteItemLevel(1)) -- 头部特质装等级
+    BaseStat = BaseStat .. ("肩部:%s "):format(AzeriteItemLevel(3)) -- 肩部特质装等级
+    BaseStat = BaseStat .. ("胸部:%s "):format(AzeriteItemLevel(5)) -- 胸部特质装等级
     return BaseStat
 end
 
@@ -102,8 +147,8 @@ local function MoreInfo()
         ("全能:%.0f%% "):format(
             GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE)
         )
-    MoreStat = MoreStat .. ("吸血:%.0f%% "):format(GetCombatRating(17) / 230)
-    MoreStat = MoreStat .. ("闪避:%.0f%% "):format(GetCombatRating(21) / 110)
+    -- MoreStat = MoreStat .. ("吸血:%.0f%% "):format(GetCombatRating(17) / 230)
+    -- MoreStat = MoreStat .. ("闪避:%.0f%% "):format(GetCombatRating(21) / 110)
     return MoreStat
 end
 
