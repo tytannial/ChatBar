@@ -45,7 +45,7 @@ local function SimpleChat_Loaded(self, event, addon)
     if event == "PLAYER_LOGOUT" and addon == "SimpleChat" then
         local point, relativeTo, relativePoint, xOfs, yOfs = SimpleChatBar:GetPoint()
         SimpleChatChrConfig = {
-            Position = {point = point, relativeTo = relativeTo, relativePoint = relativePoint, xOfs = xOfs, yOfs = yOfs}
+            Position = {point = point, relativeTo = relativeTo:GetName(), relativePoint = relativePoint, xOfs = xOfs, yOfs = yOfs}
         }
     end
 
