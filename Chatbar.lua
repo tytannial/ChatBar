@@ -16,7 +16,7 @@ COLORSCHEME_BORDER = {0.3, 0.3, 0.3, 1}
 -- 边框颜色
 
 -- 主框架初始化
-local ChatBar = CreateFrame("Frame", "SimpleChatBar", UIParent)
+local ChatBar = CreateFrame("Frame", nil, UIParent)
 SimpleChatBar = ChatBar
 
 local function ChannelSay_OnClick()
@@ -87,9 +87,15 @@ local function Movelock_OnClick(self, button)
 
             local point, relativeTo, relativePoint, xOfs, yOfs = ChatBar:GetPoint()
 
-            SimpleChatChrConfig = {
-                Position = {point = point, relativeTo = relativeTo, relativePoint = relativePoint, xOfs = xOfs, yOfs = yOfs}
-            }
+			if relativeTo then
+				SimpleChatChrConfig = {
+					Position = {point = point, relativeTo = relativeTo:GetName(), relativePoint = relativePoint, xOfs = xOfs, yOfs = yOfs}
+				}
+			else	
+				SimpleChatChrConfig = {
+					Position = {point = point, relativeTo = nil, relativePoint = relativePoint, xOfs = xOfs, yOfs = yOfs}
+				}
+			end
         else
             print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200解锁聊天条|r")
             IsMovable = true
@@ -109,7 +115,7 @@ local function Movelock_OnClick(self, button)
         if IsMovable == false then
             return
         end
-        -- ChatBar:ClearAllPoints()
+        ChatBar:ClearAllPoints()
         if Config.UseVertical then
             if Config.UseTopChatbar then
                 ChatBar:SetPoint("TOPRIGHT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX - 30, Config.ChatBarOffsetY + 25)
