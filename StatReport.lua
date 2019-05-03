@@ -1,9 +1,13 @@
 --[[
-	StatReport.lua
+    StatReport.lua
         属性通报
         TODO:适配Bfa正式版本，汇报神器项链、武器和盾牌。
-        插件更新地址 http://nga.178.com/read.php?tid=9633520
+    插件更新地址 http://nga.178.com/read.php?tid=9633520
 --]]
+local SimpleChat = LibStub("AceAddon-3.0"):GetAddon("SimpleChat")
+
+local SimpleChat_Config
+
 local slotNames = {
     "HeadSlot",
     "NeckSlot",
@@ -56,10 +60,10 @@ end
 -- 特质装等级
 local function AzeriteItemLevel(slotNum)
     local currentLevel = "0"
-
+    
     local slotId = GetInventorySlotInfo(slotNames[slotNum])
     local itemLink = GetInventoryItemLink("player", slotId)
-
+    
     if itemLink then
         local itemLoc
         if ItemLocation then
@@ -79,10 +83,10 @@ local function BaseInfo()
     BaseStat = BaseStat .. ("[%s] "):format(Talent())
     BaseStat = BaseStat .. ("最高装等:%.1f 当前:%.1f "):format(GetAverageItemLevel())
     BaseStat = BaseStat .. ("血量:%s "):format(HealText())
-    BaseStat = BaseStat .. ("神器:%s "):format(ArtifactLevel()) -- 项链等级
-    BaseStat = BaseStat .. ("头部:%s "):format(AzeriteItemLevel(1)) -- 头部特质装等级
-    BaseStat = BaseStat .. ("肩部:%s "):format(AzeriteItemLevel(3)) -- 肩部特质装等级
-    BaseStat = BaseStat .. ("胸部:%s "):format(AzeriteItemLevel(5)) -- 胸部特质装等级
+    BaseStat = BaseStat .. ("神器:%s "):format(ArtifactLevel())-- 项链等级
+    BaseStat = BaseStat .. ("头部:%s "):format(AzeriteItemLevel(1))-- 头部特质装等级
+    BaseStat = BaseStat .. ("肩部:%s "):format(AzeriteItemLevel(3))-- 肩部特质装等级
+    BaseStat = BaseStat .. ("胸部:%s "):format(AzeriteItemLevel(5))-- 胸部特质装等级
     return BaseStat
 end
 
@@ -91,20 +95,20 @@ end
 local function DpsInfo()
     local DpsStat = {"", "", ""}
     local specAttr = {
-        --纯力敏智属性职业
-        WARRIOR = {1, 1, 1},
-        DEATHKNIGHT = {1, 1, 1},
-        ROGUE = {2, 2, 2},
-        HUNTER = {2, 2, 2},
-        DEMONHUNTER = {2, 2},
-        MAGE = {3, 3, 3},
-        WARLOCK = {3, 3, 3},
-        PRIEST = {3, 3, 3},
-        --混合力敏智属性职业
-        SHAMAN = {3, 2, 3},
-        MONK = {2, 3, 2},
-        DRUID = {3, 2, 2, 3},
-        PALADIN = {3, 1, 1}
+            --纯力敏智属性职业
+            WARRIOR = {1, 1, 1},
+            DEATHKNIGHT = {1, 1, 1},
+            ROGUE = {2, 2, 2},
+            HUNTER = {2, 2, 2},
+            DEMONHUNTER = {2, 2},
+            MAGE = {3, 3, 3},
+            WARLOCK = {3, 3, 3},
+            PRIEST = {3, 3, 3},
+            --混合力敏智属性职业
+            SHAMAN = {3, 2, 3},
+            MONK = {2, 3, 2},
+            DRUID = {3, 2, 2, 3},
+            PALADIN = {3, 1, 1}
     }
     local specId = GetSpecialization()
     --    print("specId = "..specId)
@@ -146,14 +150,14 @@ local function MoreInfo()
         MoreStat ..
         ("全能:%.0f%% "):format(
             GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE)
-        )
+    )
     -- MoreStat = MoreStat .. ("吸血:%.0f%% "):format(GetCombatRating(17) / 230)
     -- MoreStat = MoreStat .. ("闪避:%.0f%% "):format(GetCombatRating(21) / 110)
     return MoreStat
 end
 
 -- 属性收集
-function StatReport()
+function SimpleChat:StatReport()
     if UnitLevel("player") < 10 then
         return BaseInfo()
     end

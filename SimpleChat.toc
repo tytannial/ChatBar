@@ -1,11 +1,19 @@
-## Interface: 80000
-## Title: SimpleChat
+## Interface: 80100
+## Title: [Chat]SimpleChat
 ## Title-zhCN: [社交]简易聊天增强
 ## Title-zhTW: [社交]簡易聊天增強
-## Notes: Simple ChatBar with timesamp and copy function.
-## Notes-zhCN: 右键【世】可以屏蔽/打开世界频道
-## Notes-zhTW: 右鍵【世】可以屏蔽/打開世界頻道.
-## SavedVariablesPerCharacter: SimpleChatChrConfig
+## Version: 1.7.0
+## Notes: SimpleChat.
+## SavedVariablesPerCharacter: SimpleChatDB
+
+#@no-lib-strip@
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+#@end-no-lib-strip@
 
 # 配置和设定-必要
 Core.lua
@@ -23,3 +31,5 @@ ChatLinkIcon.lua
 ChatLinkIlvl.lua
 # 属性报告
 StatReport.lua
+# 聊天复制
+ChatCopy.lua

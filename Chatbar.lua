@@ -1,20 +1,21 @@
 --[[
-	Chatbar.lua
-        聊天条代码
+    Chatbar.lua
+        聊天条
     插件更新地址 http://nga.178.com/read.php?tid=9633520
 --]]
+local SimpleChat = LibStub("AceAddon-3.0"):GetAddon("SimpleChat")
+
+local SimpleChat_Config
 
 --[[=========================== 变量区 ==========================]]
 -- 是否可移动的标记
 local IsMovable = false -- 没事干别动这个，你改成ture那么进入游戏后聊天条就是可以移动的
-local Config = SimpleChat_Config
 --[[=============================== END ==============================]]
 local chatFrame = SELECTED_DOCK_FRAME -- 聊天框架
 local inputbox = chatFrame.editBox -- 输入框
 
 COLORSCHEME_BORDER = {0.3, 0.3, 0.3, 1}
 -- 边框颜色
-
 -- 主框架初始化
 local ChatBar = CreateFrame("Frame", nil, UIParent)
 SimpleChatBar = ChatBar
@@ -47,7 +48,7 @@ end
 --     ChatFrame_OpenChat("/1 ", chatFrame)
 -- end
 local function ChatEmote_OnClick()
-    ToggleEmoteTable()
+    SimpleChat:ToggleEmoteTable()
 end
 
 local function ChannelWorld_OnClick(self, button)
@@ -73,9 +74,14 @@ local function Roll_OnClick()
 end
 
 local function Report_OnClick()
-    print("我的属性：" .. StatReport())
+    local statText = SimpleChat:StatReport()
+    print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200我的属性：|r" .. statText)
     ChatEdit_ActivateChat(inputbox)
-    inputbox:SetText(StatReport())
+    inputbox:SetText(statText)
+end
+
+local function ChatCopy_OnClick()
+    SimpleChat:CopyFunc()
 end
 
 local function Movelock_OnClick(self, button)
@@ -84,18 +90,14 @@ local function Movelock_OnClick(self, button)
             print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cffd20000锁定聊天条|r")
             IsMovable = false
             ChatBar:SetBackdrop(nil)
-
+            
             local point, relativeTo, relativePoint, xOfs, yOfs = ChatBar:GetPoint()
-
-			if relativeTo then
-				SimpleChatChrConfig = {
-					Position = {point = point, relativeTo = relativeTo:GetName(), relativePoint = relativePoint, xOfs = xOfs, yOfs = yOfs}
-				}
-			else	
-				SimpleChatChrConfig = {
-					Position = {point = point, relativeTo = nil, relativePoint = relativePoint, xOfs = xOfs, yOfs = yOfs}
-				}
-			end
+            
+            if relativeTo then
+                SimpleChat_Config.Position = {point = point, relativeTo = relativeTo:GetName(), relativePoint = relativePoint, xOfs = xOfs, yOfs = yOfs}
+            else
+                SimpleChat_Config.Position = {point = point, relativeTo = nil, relativePoint = relativePoint, xOfs = xOfs, yOfs = yOfs}
+            end
         else
             print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200解锁聊天条|r")
             IsMovable = true
@@ -108,7 +110,7 @@ local function Movelock_OnClick(self, button)
                     edgeSize = 16,
                     insets = {left = 4, right = 4, top = 4, bottom = 4}
                 }
-            )
+        )
         end
         ChatBar:EnableMouse(IsMovable)
     elseif button == "MiddleButton" then
@@ -116,17 +118,17 @@ local function Movelock_OnClick(self, button)
             return
         end
         ChatBar:ClearAllPoints()
-        if Config.UseVertical then
-            if Config.UseTopChatbar then
-                ChatBar:SetPoint("TOPRIGHT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX - 30, Config.ChatBarOffsetY + 25)
+        if SimpleChat_Config.UseVertical then
+            if SimpleChat_Config.UseTopChatbar then
+                ChatBar:SetPoint("TOPRIGHT", "ChatFrame1", "TOPLEFT", SimpleChat_Config.ChatBarOffsetX - 30, SimpleChat_Config.ChatBarOffsetY + 25)
             else
-                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "TOPRIGHT", Config.ChatBarOffsetX + 30, Config.ChatBarOffsetY + 25)
+                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "TOPRIGHT", SimpleChat_Config.ChatBarOffsetX + 30, SimpleChat_Config.ChatBarOffsetY + 25)
             end
         else
-            if Config.UseTopChatbar then
-                ChatBar:SetPoint("BOTTOMLEFT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY + 30)
+            if SimpleChat_Config.UseTopChatbar then
+                ChatBar:SetPoint("BOTTOMLEFT", "ChatFrame1", "TOPLEFT", SimpleChat_Config.ChatBarOffsetX, SimpleChat_Config.ChatBarOffsetY + 30)
             else
-                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "BOTTOMLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY - 30)
+                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "BOTTOMLEFT", SimpleChat_Config.ChatBarOffsetX, SimpleChat_Config.ChatBarOffsetY - 30)
             end
         end
     end
@@ -144,7 +146,8 @@ local ChannelButtons = {
     {name = "emote", text = "表", color = {1.00, 0.50, 1.00}, callback = ChatEmote_OnClick},
     {name = "roll", text = "骰", color = {1.00, 1.00, 0.00}, callback = Roll_OnClick},
     {name = "report", text = "报", color = {0.80, 0.30, 0.30}, callback = Report_OnClick},
-    {name = "movelock", text = "锁", color = {0.20, 0.20, 0.80}, callback = Movelock_OnClick}
+    {name = "movelock", text = "锁", color = {0.20, 0.20, 0.80}, callback = Movelock_OnClick},
+    {name = "chatcopy", text = "复", color = {0.20, 0.60, 0.80}, callback = ChatCopy_OnClick}
 }
 
 local function CreateChannelButton(data, index)
@@ -153,95 +156,100 @@ local function CreateChannelButton(data, index)
     -- 按钮宽度
     frame:SetHeight(22)
     -- 按钮高度
-    frame:SetAlpha(Config.AlphaOnLeave)
-
+    frame:SetAlpha(SimpleChat_Config.AlphaOnLeave)
+    
+    frame:SetFrameLevel(1)
+    
     frame:SetScript(
         "OnEnter",
         function(self)
-            self:SetAlpha(Config.AlphaOnEnter)
+            self:SetAlpha(SimpleChat_Config.AlphaOnEnter)
         end
     )
     frame:SetScript(
         "OnLeave",
         function(self)
-            self:SetAlpha(Config.AlphaOnLeave)
+            self:SetAlpha(SimpleChat_Config.AlphaOnLeave)
         end
     )
-
-    if Config.UseVertical then
-        frame:SetPoint("TOP", ChatBar, "TOP", 0, (1 - index) * Config.DistanceVertical)
+    if SimpleChat_Config.UseVertical then
+        frame:SetPoint("TOP", ChatBar, "TOP", 0, (1 - index) * SimpleChat_Config.DistanceVertical)
     else
-        frame:SetPoint("LEFT", ChatBar, "LEFT", 10 + (index - 1) * Config.DistanceHorizontal, 0)
+        frame:SetPoint("LEFT", ChatBar, "LEFT", 10 + (index - 1) * SimpleChat_Config.DistanceHorizontal, 0)
     end
-
+    
     frame:RegisterForClicks("AnyUp")
     frame:SetScript("OnClick", data.callback)
     -- 显示的文字
     frameText = frame:CreateFontString(data.name .. "Text", "OVERLAY")
     -- 字体设置
     frameText:SetFont(STANDARD_TEXT_FONT, 15, "OUTLINE")
-
+    
     frameText:SetJustifyH("CENTER")
     frameText:SetWidth(26)
     frameText:SetHeight(26)
     frameText:SetText(data.text)
     frameText:SetPoint("CENTER", 0, 0)
-
+    
     -- 文字按钮的颜色
     frameText:SetTextColor(data.color[1], data.color[2], data.color[3])
 end
 
-function SimpleChat_InitChatBar()
+function SimpleChat:InitChatBar()
+    SimpleChat_Config = self.db.profile
+    
+    ChatBar:SetFrameLevel(0)
+    
     -- 使用竖直布局
-    if Config.UseVertical then
+    if SimpleChat_Config.UseVertical then
         -- 主框体宽度
         ChatBar:SetWidth(30)
         -- 主框体高度
-        ChatBar:SetHeight(#ChannelButtons * Config.DistanceVertical + 10)
+        ChatBar:SetHeight(#ChannelButtons * SimpleChat_Config.DistanceVertical + 10)
     else
         -- 主框体宽度
-        ChatBar:SetWidth(#ChannelButtons * Config.DistanceHorizontal + 10)
+        ChatBar:SetWidth(#ChannelButtons * SimpleChat_Config.DistanceHorizontal + 10)
         -- 主框体高度
         ChatBar:SetHeight(30)
     end
-
+    
     -- 上方聊天输入框
-    if Config.UseTopInput then
+    if SimpleChat_Config.UseTopInput then
         inputbox:ClearAllPoints()
         inputbox:SetPoint("BOTTOMLEFT", chatFrame, "TOPLEFT", 0, 20)
         inputbox:SetPoint("BOTTOMRIGHT", chatFrame, "TOPRIGHT", 0, 20)
     end
-
+    
     -- 位置设定
-    if SimpleChatChrConfig.Position == nil then
-        if Config.UseVertical then
-            if Config.UseTopChatbar then
-                ChatBar:SetPoint("TOPRIGHT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX - 30, Config.ChatBarOffsetY + 25)
+    if SimpleChat_Config.Position == nil then
+        if SimpleChat_Config.UseVertical then
+            if SimpleChat_Config.UseTopChatbar then
+                ChatBar:SetPoint("TOPRIGHT", "ChatFrame1", "TOPLEFT", SimpleChat_Config.ChatBarOffsetX - 30, SimpleChat_Config.ChatBarOffsetY + 25)
             else
-                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "TOPRIGHT", Config.ChatBarOffsetX + 30, Config.ChatBarOffsetY + 25)
+                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "TOPRIGHT", SimpleChat_Config.ChatBarOffsetX + 30, SimpleChat_Config.ChatBarOffsetY + 25)
             end
         else
-            if Config.UseTopChatbar then
-                ChatBar:SetPoint("BOTTOMLEFT", "ChatFrame1", "TOPLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY + 30)
+            if SimpleChat_Config.UseTopChatbar then
+                ChatBar:SetPoint("BOTTOMLEFT", "ChatFrame1", "TOPLEFT", SimpleChat_Config.ChatBarOffsetX, SimpleChat_Config.ChatBarOffsetY + 30)
             else
-                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "BOTTOMLEFT", Config.ChatBarOffsetX, Config.ChatBarOffsetY - 30)
+                ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "BOTTOMLEFT", SimpleChat_Config.ChatBarOffsetX, SimpleChat_Config.ChatBarOffsetY - 30)
             end
         end
         print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r 聊天条位置初始化完毕")
     else
-        local point = SimpleChatChrConfig.Position.point
-        local relativeTo = SimpleChatChrConfig.Position.relativeTo
-        local relativePoint = SimpleChatChrConfig.Position.relativePoint
-        local xOfs = SimpleChatChrConfig.Position.xOfs
-        local yOfs = SimpleChatChrConfig.Position.yOfs
+        local point = SimpleChat_Config.Position.point
+        local relativeTo = SimpleChat_Config.Position.relativeTo
+        local relativePoint = SimpleChat_Config.Position.relativePoint
+        local xOfs = SimpleChat_Config.Position.xOfs
+        local yOfs = SimpleChat_Config.Position.yOfs
         ChatBar:SetPoint(point, relativeTo, relativePoint, xOfs, yOfs)
     end
-
+    
     ChatBar:SetMovable(true)
     ChatBar:RegisterForDrag("LeftButton")
     ChatBar:SetScript("OnDragStart", ChatBar.StartMoving)
     ChatBar:SetScript("OnDragStop", ChatBar.StopMovingOrSizing)
-
+    
     for i = 1, #ChannelButtons do -- 对非战斗记录聊天框的信息进行处理
         CreateChannelButton(ChannelButtons[i], i)
     end
