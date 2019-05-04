@@ -95,13 +95,15 @@ end
 
 local function EmoteIconMouseUp(frame, button)
     if (button == "LeftButton") then
-        local ChatFrameEditBox = ChatEdit_ChooseBoxForSend()
-        if (not ChatFrameEditBox:IsShown()) then
-            ChatEdit_ActivateChat(ChatFrameEditBox)
+		local chatFrame = GetCVar("chatStyle")=="im" and SELECTED_CHAT_FRAME or DEFAULT_CHAT_FRAME
+        local eb = chatFrame and chatFrame.editBox
+        if(eb) then
+            eb:Insert(frame.text)
+            eb:Show();
+            eb:SetFocus()
         end
-        ChatFrameEditBox:Insert(frame.text)
     end
-    ToggleEmoteTable()
+    SimpleChat:ToggleEmoteTable()
 end
 
 function SimpleChat:InitEmoteTableFrame()
