@@ -1,6 +1,7 @@
 ﻿--[[
     ChatEmote.lua
         聊天表情相关代码
+    修正只解析一个表情
     插件更新地址 http://nga.178.com/read.php?tid=9633520
 --]]
 local SimpleChat = LibStub("AceAddon-3.0"):GetAddon("SimpleChat")
@@ -86,7 +87,6 @@ local function ChatEmoteFilter(self, event, msg, ...)
         for i = customEmoteStartIndex, #emotes do
             if msg:find(emotes[i][1]) then
                 msg = msg:gsub(emotes[i][1], format(fmtstring, emotes[i][2]), 1)
-                break
             end
         end
     end

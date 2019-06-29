@@ -1,7 +1,7 @@
 --[[
     StatReport.lua
         属性通报
-        TODO:适配Bfa正式版本，汇报神器项链、武器和盾牌。
+    适配Bfa正式版本，汇报神器项链。修正汇报护甲为0
     插件更新地址 http://nga.178.com/read.php?tid=9633520
 --]]
 local SimpleChat = LibStub("AceAddon-3.0"):GetAddon("SimpleChat")
@@ -124,7 +124,7 @@ end
 local function TankInfo()
     local TankStat = ""
     TankStat = TankStat .. ("耐力:%s "):format(UnitStat("player", 3))
-    TankStat = TankStat .. ("护甲:%s "):format(UnitArmor("player"))
+    TankStat = TankStat .. ("护甲:%s "):format(select(3, UnitArmor("player")))
     TankStat = TankStat .. ("躲闪:%.0f%% "):format(GetDodgeChance())
     TankStat = TankStat .. ("招架:%.0f%% "):format(GetParryChance())
     TankStat = TankStat .. ("格挡:%.0f%% "):format(GetBlockChance())

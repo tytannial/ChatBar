@@ -21,7 +21,7 @@ local SimpleChat_Config = {
         -- 聊天物品链接增强
         ShowChatLinkIlvl = true, -- 显示物品链接装等
         ShowChatLinkIcon = true, -- 显示物品链接图标
-        ShowChatLinkBigIcon = true, -- 鼠标移动到链接图标上时会放大
+        -- ShowChatLinkBigIcon = true, -- 鼠标移动到链接图标上时会放大
         -- 聊天表情
         EmoteIconSize = 18, -- 聊天文字中的表情大小，你可以根据聊天字号调整
         EmoteIconListSize = 30, -- 表情选择器的图标大小
@@ -52,9 +52,7 @@ function SimpleChat:OnInitialize()
 	-- 加载功能模块
 	self:InitChatBar() -- 加载聊天条
 	self:InitChannel() -- 频道增强
-	self:InitChatLinkIlvl() -- 聊天链接装等显示
-	self:InitChatLinkIcon() -- 聊天链接图标显示
-	self:InitChatLinkBigIconFrame() -- 聊天链接大图标框架
+	self:InitChatLink() -- 聊天链接增强
 	self:InitEmoteTableFrame() -- 表情选择框架
 end
 

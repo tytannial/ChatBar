@@ -40,7 +40,7 @@ editBox:SetScript("OnEscapePressed", function(f)f:GetParent():GetParent():Hide()
 scrollArea:SetScrollChild(editBox)
 
 function SimpleChat:CopyFunc()
-    local cf = SELECTED_DOCK_FRAME
+    local cf = SELECTED_CHAT_FRAME
     local _, size = cf:GetFont()
     FCF_SetChatWindowFontSize(cf, cf, .01)
     local ct = 1

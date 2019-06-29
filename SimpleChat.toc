@@ -1,8 +1,8 @@
-## Interface: 80100
+## Interface: 80200
 ## Title: [Chat]SimpleChat
 ## Title-zhCN: [社交]简易聊天增强
 ## Title-zhTW: [社交]簡易聊天增強
-## Version: 1.7.1
+## Version: 1.7.2
 ## Notes: SimpleChat.
 ## SavedVariablesPerCharacter: SimpleChatDB
 
@@ -25,10 +25,8 @@ channel.lua
 easyChannel.lua
 # 聊天表情
 ChatEmote.lua
-# 聊天链接图标
-ChatLinkIcon.lua
-# 聊天物品链接等级
-ChatLinkIlvl.lua
+# 聊天链接
+ChatLink.lua
 # 属性报告
 StatReport.lua
 # 聊天复制

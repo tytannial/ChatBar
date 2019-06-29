@@ -235,7 +235,6 @@ function SimpleChat:InitChatBar()
                 ChatBar:SetPoint("TOPLEFT", "ChatFrame1", "BOTTOMLEFT", SimpleChat_Config.ChatBarOffsetX, SimpleChat_Config.ChatBarOffsetY - 30)
             end
         end
-        print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r 聊天条位置初始化完毕")
     else
         local point = SimpleChat_Config.Position.point
         local relativeTo = SimpleChat_Config.Position.relativeTo
@@ -253,4 +252,5 @@ function SimpleChat:InitChatBar()
     for i = 1, #ChannelButtons do -- 对非战斗记录聊天框的信息进行处理
         CreateChannelButton(ChannelButtons[i], i)
     end
+    print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r 聊天条加载完毕")
 end
