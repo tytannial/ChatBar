@@ -244,11 +244,13 @@ function SimpleChat:InitChatBar()
         ChatBar:SetPoint(point, relativeTo, relativePoint, xOfs, yOfs)
     end
     
+	ChatBar:SetFrameStrata("BACKGROUND") 
+	
     ChatBar:SetMovable(true)
     ChatBar:RegisterForDrag("LeftButton")
     ChatBar:SetScript("OnDragStart", ChatBar.StartMoving)
     ChatBar:SetScript("OnDragStop", ChatBar.StopMovingOrSizing)
-    
+
     for i = 1, #ChannelButtons do -- 对非战斗记录聊天框的信息进行处理
         CreateChannelButton(ChannelButtons[i], i)
     end
