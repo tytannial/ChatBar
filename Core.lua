@@ -4,7 +4,7 @@
     插件更新地址 http://nga.178.com/read.php?tid=9633520
 --]]
 --[[=========================== 基本设置区域 ==========================]]
-local SimpleChat = LibStub("AceAddon-3.0"):NewAddon("SimpleChat", "AceEvent-3.0", "AceConsole-3.0")
+local SimpleChat = LibStub("AceAddon-3.0"):NewAddon("SimpleChatClassic", "AceEvent-3.0", "AceConsole-3.0")
 
 local SimpleChat_Config = {
     profile = {
@@ -48,10 +48,10 @@ function SimpleChat:RegisterFilter(event, callback)
 end
 
 function SimpleChat:OnInitialize()
-    self.db = LibStub("AceDB-3.0"):New("SimpleChatDB",SimpleChat_Config)
+    self.db = LibStub("AceDB-3.0"):New("SimpleChatClassicDB",SimpleChat_Config)
 	-- 加载功能模块
 	self:InitChatBar() -- 加载聊天条
-	self:InitChannel() -- 频道增强
+	-- self:InitChannel() -- 频道增强
 	self:InitChatLink() -- 聊天链接增强
 	self:InitEmoteTableFrame() -- 表情选择框架
 end

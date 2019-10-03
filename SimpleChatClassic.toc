@@ -1,10 +1,10 @@
-## Interface: 80200
-## Title: [Chat]SimpleChat
+## Interface: 11302
+## Title: [Chat]SimpleChat Classic
 ## Title-zhCN: [社交]简易聊天增强
 ## Title-zhTW: [社交]簡易聊天增強
-## Version: 1.7.3
+## Version: 1.7.3-Classic
 ## Notes: SimpleChat.
-## SavedVariablesPerCharacter: SimpleChatDB
+## SavedVariablesPerCharacter: SimpleChatClassicDB
 
 #@no-lib-strip@
 Libs\LibStub\LibStub.lua
@@ -19,15 +19,11 @@ Libs\AceConsole-3.0\AceConsole-3.0.xml
 Core.lua
 # 聊天选择条
 Chatbar.lua
-# 聊天频道缩写
-channel.lua
 # Tab键切频道
-easyChannel.lua
+EasyChannel.lua
 # 聊天表情
 ChatEmote.lua
 # 聊天链接
 ChatLink.lua
-# 属性报告
-StatReport.lua
 # 聊天复制
 ChatCopy.lua

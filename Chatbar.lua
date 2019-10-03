@@ -3,7 +3,7 @@
         聊天条
     插件更新地址 http://nga.178.com/read.php?tid=9633520
 --]]
-local SimpleChat = LibStub("AceAddon-3.0"):GetAddon("SimpleChat")
+local SimpleChat = LibStub("AceAddon-3.0"):GetAddon("SimpleChatClassic")
 
 local SimpleChat_Config
 
@@ -11,7 +11,7 @@ local SimpleChat_Config
 -- 是否可移动的标记
 local IsMovable = false -- 没事干别动这个，你改成ture那么进入游戏后聊天条就是可以移动的
 --[[=============================== END ==============================]]
-local chatFrame = SELECTED_DOCK_FRAME -- 聊天框架
+local chatFrame = DEFAULT_CHAT_FRAME -- 聊天框架
 local inputbox = chatFrame.editBox -- 输入框
 
 COLORSCHEME_BORDER = {0.3, 0.3, 0.3, 1}
@@ -19,6 +19,27 @@ COLORSCHEME_BORDER = {0.3, 0.3, 0.3, 1}
 -- 主框架初始化
 local ChatBar = CreateFrame("Frame", nil, UIParent)
 SimpleChatBar = ChatBar
+
+local function ToggleJoinChannelByName(text)
+	local chnId, _, _ = GetChannelName(text)
+	if chnId == 0 then
+		JoinPermanentChannel(text)
+		ChatFrame_AddChannel(chatFrame, text)
+		print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200加入" .. text .. "频道|r")
+	else
+		LeaveChannelByName(text)
+		print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cffd20000离开" .. text .. "频道|r")
+	end
+end
+
+local function ToggleInputChannelByName(text)
+	local chnId, _, _ = GetChannelName(text)
+	if chnId == 0 then
+		print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200你还没有加入" .. text .. "频道|r")
+	else
+		ChatFrame_OpenChat("/" .. chnId .. " " .. inputbox:GetText(), chatFrame)
+	end
+end
 
 local function ChannelSay_OnClick()
     ChatFrame_OpenChat("/s " .. inputbox:GetText(), chatFrame)
@@ -41,43 +62,56 @@ local function ChannelRaid_OnClick()
 end
 
 local function ChannelBG_OnClick()
+	local position = UnitInBattleground("player");
+	if position == nil then
+		print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200你没有处于战场|r")
+		return
+	end
     ChatFrame_OpenChat("/bg " .. inputbox:GetText(), chatFrame)
 end
 
--- function Channel01_OnClick()
---     ChatFrame_OpenChat("/1 ", chatFrame)
--- end
+local function Channel01_OnClick(self, button)
+    local channel, _, _ = GetChannelName("综合")
+    if button == "LeftButton" then
+        ToggleInputChannelByName("综合")
+    else
+		ToggleJoinChannelByName("综合")
+    end
+end
+
+local function Channel02_OnClick(self, button)
+    local channel, _, _ = GetChannelName("交易")
+    if button == "LeftButton" then
+        ToggleInputChannelByName("交易")
+    else
+		ToggleJoinChannelByName("交易")
+    end
+end
+
+local function Channel03_OnClick(self, button)
+    local channel, _, _ = GetChannelName("寻求组队")
+    if button == "LeftButton" then
+        ToggleInputChannelByName("寻求组队")
+    else
+		ToggleJoinChannelByName("寻求组队")
+    end
+end
+
+local function ChannelWorld_OnClick(self, button)
+    local channel, _, _ = GetChannelName("大脚世界频道")
+    if button == "LeftButton" then
+        ToggleInputChannelByName("大脚世界频道")
+    else
+		ToggleJoinChannelByName("大脚世界频道")
+    end
+end
+
 local function ChatEmote_OnClick()
     SimpleChat:ToggleEmoteTable()
 end
 
-local function ChannelWorld_OnClick(self, button)
-    if button == "RightButton" then
-        local _, channelName, _ = GetChannelName("大脚世界频道")
-        if channelName == nil then
-            JoinPermanentChannel("大脚世界频道", nil, 1, 1)
-            ChatFrame_RemoveMessageGroup(chatFrame, "CHANNEL")
-            ChatFrame_AddChannel(chatFrame, "大脚世界频道")
-            print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200已加入大脚世界频道|r")
-        else
-            LeaveChannelByName("大脚世界频道")
-            print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cffd20000已离开大脚世界频道|r")
-        end
-    else
-        local channel, _, _ = GetChannelName("大脚世界频道")
-        ChatFrame_OpenChat("/" .. channel .. " " .. inputbox:GetText(), chatFrame)
-    end
-end
-
 local function Roll_OnClick()
     RandomRoll(1, 100)
-end
-
-local function Report_OnClick()
-    local statText = SimpleChat:StatReport()
-    print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200我的属性：|r" .. statText)
-    ChatEdit_ActivateChat(inputbox)
-    inputbox:SetText(statText)
 end
 
 local function ChatCopy_OnClick()
@@ -140,26 +174,23 @@ local ChannelButtons = {
     {name = "party", text = "队", color = {0.66, 0.66, 1.00}, callback = ChannelParty_OnClick},
     {name = "guild", text = "会", color = {0.25, 1.00, 0.25}, callback = ChannelGuild_OnClick},
     {name = "raid", text = "团", color = {1.00, 0.50, 0.00}, callback = ChannelRaid_OnClick},
-    {name = "LFT", text = "副", color = {1.00, 0.50, 0.00}, callback = ChannelBG_OnClick},
-    -- {name = "chn01", text = "综", color = {0.82, 0.70, 0.55}, callback = Channel01_OnClick},
+    {name = "bg", text = "战", color = {1.00, 0.50, 0.00}, callback = ChannelBG_OnClick},
+    {name = "chnGen", text = "综", color = {0.82, 0.70, 0.55}, callback = Channel01_OnClick},
+    {name = "chnTrade", text = "交", color = {0.82, 0.70, 0.55}, callback = Channel02_OnClick},
+    {name = "chnLFG", text = "寻", color = {0.82, 0.70, 0.55}, callback = Channel03_OnClick},
     {name = "world", text = "世", color = {0.78, 1.00, 0.59}, callback = ChannelWorld_OnClick},
     {name = "emote", text = "表", color = {1.00, 0.50, 1.00}, callback = ChatEmote_OnClick},
     {name = "roll", text = "骰", color = {1.00, 1.00, 0.00}, callback = Roll_OnClick},
-    {name = "report", text = "报", color = {0.80, 0.30, 0.30}, callback = Report_OnClick},
     {name = "movelock", text = "锁", color = {0.20, 0.20, 0.80}, callback = Movelock_OnClick},
     {name = "chatcopy", text = "复", color = {0.20, 0.60, 0.80}, callback = ChatCopy_OnClick}
 }
 
 local function CreateChannelButton(data, index)
-    local frame = CreateFrame("Button", "frameName", ChatBar)
-    frame:SetWidth(22)
-    -- 按钮宽度
-    frame:SetHeight(22)
-    -- 按钮高度
+    local frame = CreateFrame("Button", nil, ChatBar)
+    frame:SetWidth(22) -- 按钮宽度
+    frame:SetHeight(22) -- 按钮高度
     frame:SetAlpha(SimpleChat_Config.AlphaOnLeave)
-    
     frame:SetFrameLevel(1)
-    
     frame:SetScript(
         "OnEnter",
         function(self)
@@ -172,6 +203,7 @@ local function CreateChannelButton(data, index)
             self:SetAlpha(SimpleChat_Config.AlphaOnLeave)
         end
     )
+	
     if SimpleChat_Config.UseVertical then
         frame:SetPoint("TOP", ChatBar, "TOP", 0, (1 - index) * SimpleChat_Config.DistanceVertical)
     else
@@ -244,15 +276,16 @@ function SimpleChat:InitChatBar()
         ChatBar:SetPoint(point, relativeTo, relativePoint, xOfs, yOfs)
     end
     
-	ChatBar:SetFrameStrata("BACKGROUND") 
-	
     ChatBar:SetMovable(true)
     ChatBar:RegisterForDrag("LeftButton")
     ChatBar:SetScript("OnDragStart", ChatBar.StartMoving)
     ChatBar:SetScript("OnDragStop", ChatBar.StopMovingOrSizing)
-
+    
     for i = 1, #ChannelButtons do -- 对非战斗记录聊天框的信息进行处理
         CreateChannelButton(ChannelButtons[i], i)
     end
+	
+    ChatFrame_RemoveMessageGroup(chatFrame, "CHANNEL") -- 屏蔽出入信息
+	
     print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r 聊天条加载完毕")
 end

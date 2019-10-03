@@ -4,7 +4,7 @@
 -- 修改日志：
 -- 合并物品等级和图标解析，增加货币解析。移除了鼠标提示，预计下版本重新加入。
 ----------------------------------------------
-local SimpleChat = LibStub("AceAddon-3.0"):GetAddon("SimpleChat")
+local SimpleChat = LibStub("AceAddon-3.0"):GetAddon("SimpleChatClassic")
 
 local SimpleChat_Config
 

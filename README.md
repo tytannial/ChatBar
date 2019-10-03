@@ -1,2 +1,2 @@
 # ChatBar
-A world of warcraft Chatframe Addon
+A World of Warcraft Classic Chatframe Addon

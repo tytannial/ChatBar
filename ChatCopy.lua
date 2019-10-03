@@ -4,7 +4,7 @@
 		修改自 siweia@NGA 的 NDui http://nga.178.com/read.php?tid=5483616
 	插件更新地址 http://nga.178.com/read.php?tid=9633520
 --]]
-local SimpleChat = LibStub("AceAddon-3.0"):GetAddon("SimpleChat")
+local SimpleChat = LibStub("AceAddon-3.0"):GetAddon("SimpleChatClassic")
 
 local lines = {}
 
