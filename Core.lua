@@ -37,18 +37,8 @@ local SimpleChat_Config = {
 --[[=============================== END ==============================]]
 -- 载入插件配置
 
-function SimpleChat:RegisterFilter(event, callback)
-	local frames = {GetFramesRegisteredForEvent(event)}
-	ChatFrame_AddMessageEventFilter(event, callback)
-	for i = 1, #frames do
-		local frame = frames[i]
-		frame:UnregisterEvent(event)
-		frame:RegisterEvent(event)
-	end
-end
-
 function SimpleChat:OnInitialize()
-    self.db = LibStub("AceDB-3.0"):New("SimpleChatDB",SimpleChat_Config)
+    self.db = LibStub("AceDB-3.0"):New("SimpleChatDB", SimpleChat_Config)
 	-- 加载功能模块
 	self:InitChatBar() -- 加载聊天条
 	self:InitChannel() -- 频道增强

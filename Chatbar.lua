@@ -17,7 +17,7 @@ local inputbox = chatFrame.editBox -- 输入框
 COLORSCHEME_BORDER = {0.3, 0.3, 0.3, 1}
 -- 边框颜色
 -- 主框架初始化
-local ChatBar = CreateFrame("Frame", nil, UIParent)
+local ChatBar = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 SimpleChatBar = ChatBar
 
 local function ChannelSay_OnClick()
@@ -75,9 +75,12 @@ end
 
 local function Report_OnClick()
     local statText = SimpleChat:StatReport()
-    print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200我的属性：|r" .. statText)
-    ChatEdit_ActivateChat(inputbox)
-    inputbox:SetText(statText)
+    if button == "RightButton" then
+        print("|cffffe00a<|r|cffff7d0aSimpleChat|r|cffffe00a>|r |cff00d200我的属性：|r" .. statText)
+    else     
+        ChatEdit_ActivateChat(inputbox)
+        inputbox:SetText(statText)
+    end
 end
 
 local function ChatCopy_OnClick()
@@ -244,13 +247,11 @@ function SimpleChat:InitChatBar()
         ChatBar:SetPoint(point, relativeTo, relativePoint, xOfs, yOfs)
     end
     
-	ChatBar:SetFrameStrata("BACKGROUND") 
-	
     ChatBar:SetMovable(true)
     ChatBar:RegisterForDrag("LeftButton")
     ChatBar:SetScript("OnDragStart", ChatBar.StartMoving)
     ChatBar:SetScript("OnDragStop", ChatBar.StopMovingOrSizing)
-
+    
     for i = 1, #ChannelButtons do -- 对非战斗记录聊天框的信息进行处理
         CreateChannelButton(ChannelButtons[i], i)
     end

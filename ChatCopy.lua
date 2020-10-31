@@ -8,7 +8,7 @@ local SimpleChat = LibStub("AceAddon-3.0"):GetAddon("SimpleChat")
 
 local lines = {}
 
-local chatCopyFrame = CreateFrame("Frame", "ChatCopyFrame", UIParent)
+local chatCopyFrame = CreateFrame("Frame", "ChatCopyFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 chatCopyFrame:SetPoint("CENTER", UIParent, "CENTER")
 chatCopyFrame:SetSize(700, 400)
 chatCopyFrame:Hide()

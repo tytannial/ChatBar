@@ -24,7 +24,7 @@ local function SetChatLinkIcon(Hyperlink)
     if (schema == "item") then
         texture = select(10, GetItemInfo(tonumber(id)))
     elseif (schema == "currency") then
-        texture = select(3, GetCurrencyInfo(tonumber(id)))
+        texture = C_CurrencyInfo.GetCurrencyInfo(tonumber(id)).iconFileID
     elseif (schema == "spell") then
         texture = select(3, GetSpellInfo(tonumber(id)))
     elseif (schema == "achievement") then
@@ -60,28 +60,28 @@ end
 
 function SimpleChat:InitChatLink()
     SimpleChat_Config = self.db.profile
-    self:RegisterFilter("CHAT_MSG_CHANNEL", ChatLinkFilter)-- 公共频道
-    self:RegisterFilter("CHAT_MSG_SAY", ChatLinkFilter)-- 说
-    self:RegisterFilter("CHAT_MSG_YELL", ChatLinkFilter)-- 大喊
-    self:RegisterFilter("CHAT_MSG_RAID", ChatLinkFilter)-- 团队
-    self:RegisterFilter("CHAT_MSG_RAID_LEADER", ChatLinkFilter)-- 团队领袖
-    self:RegisterFilter("CHAT_MSG_PARTY", ChatLinkFilter)-- 队伍
-    self:RegisterFilter("CHAT_MSG_PARTY_LEADER", ChatLinkFilter)-- 队伍领袖
-    self:RegisterFilter("CHAT_MSG_GUILD", ChatLinkFilter)-- 公会
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", ChatLinkFilter)-- 公共频道
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChatLinkFilter)-- 说
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ChatLinkFilter)-- 大喊
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", ChatLinkFilter)-- 团队
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", ChatLinkFilter)-- 团队领袖
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", ChatLinkFilter)-- 队伍
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", ChatLinkFilter)-- 队伍领袖
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", ChatLinkFilter)-- 公会
     
-    self:RegisterFilter("CHAT_MSG_AFK", ChatLinkFilter)-- AFK玩家自动回复
-    self:RegisterFilter("CHAT_MSG_DND", ChatLinkFilter)-- 切勿打扰自动回复
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", ChatLinkFilter)-- AFK玩家自动回复
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", ChatLinkFilter)-- 切勿打扰自动回复
     -- 副本和副本领袖
-    self:RegisterFilter("CHAT_MSG_INSTANCE_CHAT", ChatLinkFilter)
-    self:RegisterFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ChatLinkFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", ChatLinkFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ChatLinkFilter)
     -- 解析战网私聊
-    self:RegisterFilter("CHAT_MSG_WHISPER", ChatLinkFilter)
-    self:RegisterFilter("CHAT_MSG_WHISPER_INFORM", ChatLinkFilter)
-    self:RegisterFilter("CHAT_MSG_BN_WHISPER", ChatLinkFilter)
-    self:RegisterFilter("CHAT_MSG_BN_WHISPER_INFORM", ChatLinkFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", ChatLinkFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", ChatLinkFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", ChatLinkFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", ChatLinkFilter)
     -- 解析社区聊天内容
-    self:RegisterFilter("CHAT_MSG_COMMUNITIES_CHANNEL", ChatLinkFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_COMMUNITIES_CHANNEL", ChatLinkFilter)
     --拾取信息
-    self:RegisterFilter("CHAT_MSG_LOOT", ChatLinkFilter)
-    self:RegisterFilter("CHAT_MSG_CURRENCY", ChatLinkFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", ChatLinkFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_CURRENCY", ChatLinkFilter)
 end

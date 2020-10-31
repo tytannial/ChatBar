@@ -95,9 +95,9 @@ end
 
 local function EmoteIconMouseUp(frame, button)
     if (button == "LeftButton") then
-		local chatFrame = GetCVar("chatStyle")=="im" and SELECTED_CHAT_FRAME or DEFAULT_CHAT_FRAME
+        local chatFrame = GetCVar("chatStyle") == "im" and SELECTED_CHAT_FRAME or DEFAULT_CHAT_FRAME
         local eb = chatFrame and chatFrame.editBox
-        if(eb) then
+        if (eb) then
             eb:Insert(frame.text)
             eb:Show();
             eb:SetFocus()
@@ -110,33 +110,28 @@ function SimpleChat:InitEmoteTableFrame()
     SimpleChat_Config = self.db.profile
     fmtstring = format("\124T%%s:%d\124t", max(floor(select(2, SELECTED_CHAT_FRAME:GetFont())), SimpleChat_Config.EmoteIconSize))
     
-    EmoteTableFrame = CreateFrame("Frame", "EmoteTableFrame", UIParent)
-    
+    EmoteTableFrame = CreateFrame("Frame", "EmoteTableFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
     EmoteTableFrame:SetMovable(true)
     EmoteTableFrame:RegisterForDrag("LeftButton")
     EmoteTableFrame:SetScript("OnDragStart", EmoteTableFrame.StartMoving)
     EmoteTableFrame:SetScript("OnDragStop", EmoteTableFrame.StopMovingOrSizing)
     EmoteTableFrame:EnableMouse(true)
-    
-    EmoteTableFrame:SetBackdrop(
-        {
-            bgFile = "Interface\\Buttons\\WHITE8x8",
-            edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-            tile = true,
-            tileSize = 16,
-            edgeSize = 16,
-            insets = {left = 3, right = 3, top = 3, bottom = 3}
-        }
-    )
-    EmoteTableFrame:SetBackdropColor(0.05, 0.05, 0.05, 0.8)
-    EmoteTableFrame:SetBackdropBorderColor(0.3, 0.3, 0.3)
     EmoteTableFrame:SetWidth((SimpleChat_Config.EmoteIconListSize + 6) * 12 + 10)
     EmoteTableFrame:SetHeight((SimpleChat_Config.EmoteIconListSize + 6) * 5 + 10)
     EmoteTableFrame:SetPoint("BOTTOM", ChatFrame1EditBox, SimpleChat_Config.EmoteOffsetX, SimpleChat_Config.EmoteOffsetY)
+    EmoteTableFrame:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = true,
+        tileSize = 16,
+        edgeSize = 16,
+        insets = {left = 3, right = 3, top = 3, bottom = 3}
+    })
+    EmoteTableFrame:SetBackdropColor(0.05, 0.05, 0.05, 0.8)
+    EmoteTableFrame:SetBackdropBorderColor(0.3, 0.3, 0.3)
     -- 表情选择框出现位置 默认30,30
     EmoteTableFrame:Hide()
     EmoteTableFrame:SetFrameStrata("DIALOG")
-    
     local icon, row, col
     row = 1
     col = 1
@@ -165,28 +160,28 @@ function SimpleChat:InitEmoteTableFrame()
         end
     end
     
-    self:RegisterFilter("CHAT_MSG_CHANNEL", ChatEmoteFilter)-- 公共频道
-    self:RegisterFilter("CHAT_MSG_SAY", ChatEmoteFilter)-- 说
-    self:RegisterFilter("CHAT_MSG_YELL", ChatEmoteFilter)-- 大喊
-    self:RegisterFilter("CHAT_MSG_RAID", ChatEmoteFilter)-- 团队
-    self:RegisterFilter("CHAT_MSG_RAID_LEADER", ChatEmoteFilter)-- 团队领袖
-    self:RegisterFilter("CHAT_MSG_PARTY", ChatEmoteFilter)-- 队伍
-    self:RegisterFilter("CHAT_MSG_PARTY_LEADER", ChatEmoteFilter)-- 队伍领袖
-    self:RegisterFilter("CHAT_MSG_GUILD", ChatEmoteFilter)-- 公会
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", ChatEmoteFilter)-- 公共频道
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChatEmoteFilter)-- 说
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ChatEmoteFilter)-- 大喊
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", ChatEmoteFilter)-- 团队
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", ChatEmoteFilter)-- 团队领袖
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", ChatEmoteFilter)-- 队伍
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", ChatEmoteFilter)-- 队伍领袖
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", ChatEmoteFilter)-- 公会
     
-    self:RegisterFilter("CHAT_MSG_AFK", ChatEmoteFilter)-- AFK玩家自动回复
-    self:RegisterFilter("CHAT_MSG_DND", ChatEmoteFilter)-- 切勿打扰自动回复
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", ChatEmoteFilter)-- AFK玩家自动回复
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", ChatEmoteFilter)-- 切勿打扰自动回复
     
     -- 副本和副本领袖
-    self:RegisterFilter("CHAT_MSG_INSTANCE_CHAT", ChatEmoteFilter)
-    self:RegisterFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ChatEmoteFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", ChatEmoteFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ChatEmoteFilter)
     -- 解析战网私聊
-    self:RegisterFilter("CHAT_MSG_WHISPER", ChatEmoteFilter)
-    self:RegisterFilter("CHAT_MSG_WHISPER_INFORM", ChatEmoteFilter)
-    self:RegisterFilter("CHAT_MSG_BN_WHISPER", ChatEmoteFilter)
-    self:RegisterFilter("CHAT_MSG_BN_WHISPER_INFORM", ChatEmoteFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", ChatEmoteFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", ChatEmoteFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", ChatEmoteFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", ChatEmoteFilter)
     -- 解析社区聊天内容
-    self:RegisterFilter("CHAT_MSG_COMMUNITIES_CHANNEL", ChatEmoteFilter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_COMMUNITIES_CHANNEL", ChatEmoteFilter)
 end
 
 function SimpleChat:ToggleEmoteTable()

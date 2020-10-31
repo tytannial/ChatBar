@@ -188,33 +188,29 @@ local rules = {
 }
 
 -- 文字修改函数
-local function AddMessage(frame, text, ...)
+function SimpleChat:AddMessage(text, ...)
     -- 频道标签精简
-    if SimpleChat_Config.ShortChannel then
-        for i = 1, 8 do -- 对应上面几个频道(如果有9个频道就for i = 1, 9 do)
-            text = gsub(text, chn[i], rplc[i])
-        end
-        text = gsub(text, "%[(%d0?)%. .-%]", "%1.")
-    end
-    
     if (type(text) ~= "string") then
         text = tostring(text)
     end
-    
-    return newAddMsg[frame](frame, text, ...)
+    for i = 1, 8 do -- 对应上面几个频道(如果有9个频道就for i = 1, 9 do)
+        text = text:gsub(chn[i], rplc[i])
+    end
+    text = text:gsub("%[(%d0?)%. .-%]", "%1.")
+    return self.DefaultAddMessage(self, text, ...)
 end
 
 -- 初始化频道信息精简模块
 function SimpleChat:InitChannel()
     SimpleChat_Config = self.db.profile
-    
-    for i = 1, NUM_CHAT_WINDOWS do
-        local cf = _G['ChatFrame' .. i]
-        if i ~= 2 then
-            newAddMsg[cf] = cf.AddMessage
-            cf.AddMessage = AddMessage
+    if SimpleChat_Config.ShortChannel then
+        for i = 1, NUM_CHAT_WINDOWS do
+            if i ~= 2 then
+                local cf = _G['ChatFrame' .. i]
+                cf.DefaultAddMessage = cf.AddMessage
+                cf.AddMessage = self.AddMessage
+            end
         end
     end
-
 -- RemoveChatWindowMessages(ChatFrame1, "messageGroup") -- 屏蔽出入频道信息
 end
