@@ -76,17 +76,38 @@ local function AzeriteItemLevel(slotNum)
     return currentLevel
 end
 
+local function GetItemLevel(slotNum)
+    local slotId = GetInventorySlotInfo(slotNames[slotNum])
+    local itemLink = GetInventoryItemLink("player", slotId)
+    if itemLink then
+        local _ ,_ ,_ , ilvl ,_ ,_, iSubType = GetItemInfo(itemLink)
+        return iSubType .. "-" .. ilvl
+    end
+    return "0"
+end
+
 -- 基础属性
 local function BaseInfo()
     local BaseStat = ""
     BaseStat = BaseStat .. ("[%s] "):format(UnitClass("player"))
     BaseStat = BaseStat .. ("[%s] "):format(Talent())
     BaseStat = BaseStat .. ("最高装等:%.1f 当前:%.1f "):format(GetAverageItemLevel())
+    
+    local mainHand = GetItemLevel(17)
+    if mainHand ~= "0" then
+        BaseStat = BaseStat .. ("主手:%s "):format(mainHand)
+    end
+
+    local offHand = GetItemLevel(18)
+    if offHand ~= "0" then
+        BaseStat = BaseStat .. ("副手:%s "):format(offHand)
+    end
+
     BaseStat = BaseStat .. ("血量:%s "):format(HealText())
-    BaseStat = BaseStat .. ("神器:%s "):format(ArtifactLevel())-- 项链等级
-    BaseStat = BaseStat .. ("头部:%s "):format(AzeriteItemLevel(1))-- 头部特质装等级
-    BaseStat = BaseStat .. ("肩部:%s "):format(AzeriteItemLevel(3))-- 肩部特质装等级
-    BaseStat = BaseStat .. ("胸部:%s "):format(AzeriteItemLevel(5))-- 胸部特质装等级
+    -- BaseStat = BaseStat .. ("神器:%s "):format(ArtifactLevel())-- 项链等级
+    -- BaseStat = BaseStat .. ("头部:%s "):format(AzeriteItemLevel(1))-- 头部特质装等级
+    -- BaseStat = BaseStat .. ("肩部:%s "):format(AzeriteItemLevel(3))-- 肩部特质装等级
+    -- BaseStat = BaseStat .. ("胸部:%s "):format(AzeriteItemLevel(5))-- 胸部特质装等级
     return BaseStat
 end
 
@@ -145,10 +166,7 @@ local function MoreInfo()
     MoreStat = MoreStat .. ("爆击:%.0f%% "):format(GetCritChance())
     MoreStat = MoreStat .. ("急速:%.0f%% "):format(GetMeleeHaste())
     MoreStat = MoreStat .. ("精通:%.0f%% "):format(GetMasteryEffect())
-    --MoreStat = MoreStat..("溅射:%s "):format(GetMultistrike())
-    MoreStat =
-        MoreStat ..
-        ("全能:%.0f%% "):format(
+    MoreStat = MoreStat .. ("全能:%.0f%% "):format(
             GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE)
     )
     -- MoreStat = MoreStat .. ("吸血:%.0f%% "):format(GetCombatRating(17) / 230)

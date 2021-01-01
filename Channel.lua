@@ -132,7 +132,8 @@ if (Language == "zhCN") then ---国服
     rplc[5] = "[%1守]"
     rplc[6] = "[%1招]"
     rplc[7] = "[%1世]"
-    rplc[8] = "[%1自定义]" -- 自定义频道缩写请自行修改
+    rplc[8] = "[%1萌]"
+    rplc[9] = "[%1自定义]" -- 自定义频道缩写请自行修改
 elseif (Language == "zhTW") then ---台服
     rplc[1] = "[%1綜合]"
     rplc[2] = "[%1貿易]"
@@ -141,7 +142,8 @@ elseif (Language == "zhTW") then ---台服
     rplc[5] = "[%1守備]"
     rplc[6] = "[%1招募]"
     rplc[7] = "[%1世界]"
-    rplc[8] = "[%1自定义]" -- 自定义频道缩写请自行修改
+    rplc[8] = "[%1新手]"
+    rplc[9] = "[%1自定義]" -- 自定义频道缩写请自行修改
 end
 
 if Language == "zhCN" then
@@ -153,7 +155,8 @@ if Language == "zhCN" then
     chn[5] = "%[%d+%. 世界防务%]"
     chn[6] = "%[%d+%. 公会招募.-%]"
     chn[7] = "%[%d+%. 大脚世界频道.-%]"
-    chn[8] = "%[%d+%. 自定义频道.-%]" -- 请修改频道名对应你游戏里的频道
+    chn[8] = "%[%d+%. 新手聊天.-%]"
+    chn[9] = "%[%d+%. 自定义频道.-%]" -- 请修改频道名对应你游戏里的频道
 elseif Language == "zhTW" then
     ---------------------------------------- 台服繁体中文 ---------------------------------------------
     chn[1] = "%[%d+%. 綜合.-%]"
@@ -163,7 +166,8 @@ elseif Language == "zhTW" then
     chn[5] = "%[%d+%. 世界防務%]"
     chn[6] = "%[%d+%. 公會招募.-%]"
     chn[7] = "%[%d+%. 大脚世界频道.-%]"
-    chn[8] = "%[%d+%. 自定义频道.-%]" -- 请修改频道名对应你游戏里的频道
+    chn[8] = "%[%d+%. 新手聊天.-%]"
+    chn[9] = "%[%d+%. 自定义频道.-%]" -- 请修改频道名对应你游戏里的频道
 end
 
 local rules = {
@@ -193,7 +197,7 @@ function SimpleChat:AddMessage(text, ...)
     if (type(text) ~= "string") then
         text = tostring(text)
     end
-    for i = 1, 8 do -- 对应上面几个频道(如果有9个频道就for i = 1, 9 do)
+    for i = 1, #chn do -- 对应上面几个频道(如果有9个频道就for i = 1, 9 do)
         text = text:gsub(chn[i], rplc[i])
     end
     text = text:gsub("%[(%d0?)%. .-%]", "%1.")
