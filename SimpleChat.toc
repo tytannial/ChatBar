@@ -2,7 +2,7 @@
 ## Title: [Chat]SimpleChat
 ## Title-zhCN: [社交]简易聊天增强
 ## Title-zhTW: [社交]簡易聊天增強
-## Version: 1.7.4
+## Version: 1.7.5
 ## Notes: SimpleChat.
 ## SavedVariablesPerCharacter: SimpleChatDB
 
